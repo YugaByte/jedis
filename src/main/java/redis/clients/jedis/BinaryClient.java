@@ -407,6 +407,35 @@ public class BinaryClient extends Connection {
     sendCommand(SRANDMEMBER, key);
   }
 
+  public void tsadd(final byte[] key, final Map<byte[], byte[]> timeseries) {
+    final List<byte[]> params = new ArrayList<byte[]>();
+    params.add(key);
+
+    for (final Entry<byte[], byte[]> entry : timeseries.entrySet()) {
+      params.add(entry.getKey());
+      params.add(entry.getValue());
+    }
+    sendCommand(TSADD, params.toArray(new byte[params.size()][]));
+  }
+
+  public void tsadd(final byte[] key, final Map<byte[], byte[]> timeseries, final byte[] expire_cmd,
+                    final byte[] expire_time) {
+    final List<byte[]> params = new ArrayList<byte[]>();
+    params.add(key);
+
+    for (final Entry<byte[], byte[]> entry : timeseries.entrySet()) {
+      params.add(entry.getKey());
+      params.add(entry.getValue());
+    }
+    params.add(expire_cmd);
+    params.add(expire_time);
+    sendCommand(TSADD, params.toArray(new byte[params.size()][]));
+  }
+
+  public void tsget(final byte[] key, final byte[] timestamp) {
+    sendCommand(TSGET, key, timestamp);
+  }
+
   public void zadd(final byte[] key, final double score, final byte[] member) {
     sendCommand(ZADD, key, toByteArray(score), member);
   }

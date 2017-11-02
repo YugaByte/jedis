@@ -136,6 +136,12 @@ public interface JedisCommands {
 
   Long strlen(String key);
 
+  String tsadd(String key, Map<Long, String> timeseries);
+
+  String tsadd(String key, Map<Long, String> timeseries, String expire_cmd, long expire_time);
+
+  String tsget(String key, long timestamp);
+
   Long zadd(String key, double score, String member);
 
   Long zadd(String key, double score, String member, ZAddParams params);

@@ -204,7 +204,7 @@ public class Connection implements Closeable {
         inputStream = new RedisInputStream(socket.getInputStream());
       } catch (IOException ex) {
         broken = true;
-        throw new JedisConnectionException("Failed connecting to host " 
+        throw new JedisConnectionException("Failed connecting to host "
             + host + ":" + port, ex);
       }
     }

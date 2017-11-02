@@ -139,6 +139,13 @@ public interface BinaryRedisPipeline {
 
   Response<String> type(byte[] key);
 
+  Response<String> tsadd(byte[] key, Map<byte[], byte[]> timeseries);
+
+  Response<String> tsadd(byte[] key, Map<byte[], byte[]> timeseries,
+                         byte[] expire_cmd, byte[] expire_time);
+
+  Response<byte[]> tsget(byte[] key, byte[] timestamp);
+
   Response<Long> zadd(byte[] key, double score, byte[] member);
 
   Response<Long> zadd(byte[] key, double score, byte[] member, ZAddParams params);

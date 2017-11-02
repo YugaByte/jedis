@@ -137,6 +137,13 @@ public interface RedisPipeline {
 
   Response<String> type(String key);
 
+  Response<String> tsadd(String key, Map<Long, String> timeseries);
+
+  Response<String> tsadd(String key, Map<Long, String> timeseries,
+                         String expire_cmd, long expire_time);
+
+  Response<String> tsget(String key, long timestamp);
+
   Response<Long> zadd(String key, double score, String member);
 
   Response<Long> zadd(String key, double score, String member, ZAddParams params);

@@ -673,6 +673,44 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.STRING);
   }
 
+  @Override
+  public Response<String> tsadd(String key, Map<Long, String> timeseries) {
+    getClient(key).tsadd(key, timeseries);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> tsadd(byte[] key, Map<byte[], byte[]> timeseries) {
+    getClient(key).tsadd(key, timeseries);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> tsadd(String key, Map<Long, String> timeseries,
+                                String expire_cmd, long expire_time) {
+    getClient(key).tsadd(key, timeseries, expire_cmd, expire_time);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> tsadd(byte[] key, Map<byte[], byte[]> timeseries,
+                                byte[] expire_cmd, byte[] expire_time) {
+    getClient(key).tsadd(key, timeseries, expire_cmd, expire_time);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<String> tsget(String key, long timestamp) {
+    getClient(key).tsget(key, timestamp);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
+  public Response<byte[]> tsget(byte[] key, byte[] timestamp) {
+    getClient(key).tsget(key, timestamp);
+    return getResponse(BuilderFactory.BYTE_ARRAY);
+  }
+
   public Response<Long> zadd(String key, double score, String member) {
     getClient(key).zadd(key, score, member);
     return getResponse(BuilderFactory.LONG);
@@ -1505,6 +1543,5 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     getClient(key).bitfield(key, elements);
     return getResponse(BuilderFactory.LONG_LIST);
   }
-
 
 }

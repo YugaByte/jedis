@@ -128,6 +128,12 @@ public interface BinaryJedisClusterCommands {
 
   Long strlen(byte[] key);
 
+  String tsadd(byte[] key, Map<byte[], byte[]> timeseries);
+
+  String tsadd(byte[] key, Map<byte[], byte[]> timeseries, byte[] expire_cmd, byte[] expire_time);
+
+  byte[] tsget(byte[] key, byte[] timestamp);
+
   Long zadd(byte[] key, double score, byte[] member);
 
   Long zadd(byte[] key, Map<byte[], Double> scoreMembers);
@@ -262,7 +268,7 @@ public interface BinaryJedisClusterCommands {
       GeoRadiusParam param);
 
   ScanResult<byte[]> scan(final byte[] cursor, final ScanParams params);
-  
+
   ScanResult<Map.Entry<byte[], byte[]>> hscan(byte[] key, byte[] cursor);
 
   ScanResult<Map.Entry<byte[], byte[]>> hscan(byte[] key, byte[] cursor, ScanParams params);
