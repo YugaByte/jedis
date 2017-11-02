@@ -349,6 +349,22 @@ public class BinaryShardedJedis extends Sharded<Jedis, JedisShardInfo> implement
     return j.srandmember(key, count);
   }
 
+  public String tsadd(byte[] key, Map<byte[], byte[]> timeseries) {
+    Jedis j = getShard(key);
+    return j.tsadd(key, timeseries);
+  }
+
+  public String tsadd(byte[] key, Map<byte[], byte[]> timeseries,
+                      byte[] expire_cmd, byte[] expire_time) {
+    Jedis j = getShard(key);
+    return j.tsadd(key, timeseries, expire_cmd, expire_time);
+  }
+
+  public byte[] tsget(byte[] key, byte[] timestamp) {
+    Jedis j = getShard(key);
+    return j.tsget(key, timestamp);
+  }
+
   public Long zadd(byte[] key, double score, byte[] member) {
     Jedis j = getShard(key);
     return j.zadd(key, score, member);
@@ -797,5 +813,5 @@ public class BinaryShardedJedis extends Sharded<Jedis, JedisShardInfo> implement
     Jedis j = getShard(key);
     return j.bitfield(key, arguments);
  }
-  
+
 }

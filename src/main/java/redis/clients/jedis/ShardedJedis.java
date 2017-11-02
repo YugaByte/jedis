@@ -398,6 +398,25 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     return j.srandmember(key, count);
   }
 
+  @Override
+  public String tsadd(String key, Map<Long, String> timeseries) {
+    Jedis j = getShard(key);
+    return j.tsadd(key, timeseries);
+  }
+
+  @Override
+  public String tsadd(String key, Map<Long, String> timeseries,
+                      String expire_cmd, long expire_time) {
+    Jedis j = getShard(key);
+    return j.tsadd(key, timeseries, expire_cmd, expire_time);
+  }
+
+  @Override
+  public String tsget(String key, long timestamp) {
+    Jedis j = getShard(key);
+    return j.tsget(key, timestamp);
+  }
+
   public Long zadd(String key, double score, String member) {
     Jedis j = getShard(key);
     return j.zadd(key, score, member);
@@ -660,7 +679,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Entry<String, String>> hscan(String key, int cursor) {
     Jedis j = getShard(key);
@@ -671,7 +690,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> sscan(String key, int cursor) {
     Jedis j = getShard(key);
@@ -682,7 +701,7 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Tuple> zscan(String key, int cursor) {
     Jedis j = getShard(key);

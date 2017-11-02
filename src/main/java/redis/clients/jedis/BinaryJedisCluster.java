@@ -659,6 +659,35 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
   }
 
   @Override
+  public String tsadd(final byte[] key, final Map<byte[], byte[]> timeseries) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.tsadd(key, timeseries);
+      }
+    }.runBinary(key);
+  }
+
+  @Override
+  public String tsadd(final byte[] key, final Map<byte[], byte[]> timeseries,
+                      final byte[] expire_cmd, final byte[] expire_time) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.tsadd(key, timeseries, expire_cmd, expire_time);
+      }
+    }.runBinary(key);
+  }
+
+  @Override
+  public byte[] tsget(final byte[] key, final byte[] timestamp) {
+    return new JedisClusterCommand<byte[]>(connectionHandler, maxAttempts) {
+      @Override
+      public byte[] execute(Jedis connection) { return connection.tsget(key, timestamp); }
+    }.runBinary(key);
+  }
+
+  @Override
   public Long zadd(final byte[] key, final double score, final byte[] member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
       @Override
@@ -1953,7 +1982,7 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
       }
     }.runBinary(key);
   }
-  
+
   @Override
   public ScanResult<byte[]> scan(final byte[] cursor, final ScanParams params) {
 
@@ -1976,7 +2005,7 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
       throw new IllegalArgumentException(BinaryJedisCluster.class.getSimpleName() + " only supports SCAN commands with MATCH patterns containing hash-tags ( curly-brackets enclosed strings )");
     }
   }
-  
+
   @Override
   public ScanResult<Map.Entry<byte[], byte[]>> hscan(final byte[] key, final byte[] cursor) {
     return new JedisClusterCommand<ScanResult<Map.Entry<byte[], byte[]>>>(connectionHandler,

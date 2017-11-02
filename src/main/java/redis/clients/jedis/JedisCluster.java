@@ -715,6 +715,35 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
   }
 
   @Override
+  public String tsadd(final String key, final Map<Long, String> timeseries) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.tsadd(key, timeseries);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public String tsadd(final String key, final Map<Long, String> timeseries,
+                      final String expire_cmd, final long expire_time) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.tsadd(key, timeseries, expire_cmd, expire_time);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public String tsget(final String key, final long timestamp) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) { return connection.tsget(key, timestamp); }
+    }.run(key);
+  }
+
+  @Override
   public Long zadd(final String key, final double score, final String member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
       @Override

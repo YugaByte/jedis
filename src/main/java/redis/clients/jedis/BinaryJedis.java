@@ -1537,7 +1537,64 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   }
 
   /**
-   * Add the specified member having the specifeid score to the sorted set stored at key. If member
+   * Insert the pairs (timestamp, value) into the map stored at key. TSADD replaces old values with
+   * new values.
+   * <p>
+   * If key does not exist, a new key holding a map is created.
+   * <p>
+   * <b>Time complexity:</b> O(N) (with N being the number of timestamps)
+   * @param key
+   * @param timeseries
+   * @return Status code reply
+   */
+  public String tsadd(final byte[] key, final Map<byte[], byte[]> timeseries) {
+    checkIsInMultiOrPipeline();
+    client.tsadd(key, timeseries);
+    return client.getStatusCodeReply();
+  }
+
+  /**
+   * Insert the pairs (timestamp, value) into the map stored at key. TSADD replaces old values with
+   * new values. If expire_cmd is EXPIRE_IN, the pair (timestamp, value) will be purged after
+   * expire_time seconds. If expire_cmd is EXPIRE_AT, expire_time will be interpreted as a Unix
+   * timestamp (seconds since January 1, 1970), and the pair (timestamp, value) will be expire at
+   * the specified unix time.
+   * <p>
+   * If key does not exist, a new key holding a map is created.
+   * <p>
+   * <b>Time complexity:</b> O(N) (with N being the number of timestamps)
+   * @param key
+   * @param timeseries
+   * @param expire_cmd
+   * @param expire_time
+   * @return Status code reply
+   */
+  public String tsadd(final byte[] key, final Map<byte[], byte[]> timeseries,
+                      final byte[] expire_cmd, final byte[] expire_time) {
+    checkIsInMultiOrPipeline();
+    client.tsadd(key, timeseries, expire_cmd, expire_time);
+    return client.getStatusCodeReply();
+  }
+
+  /**
+   * Retrieve the value associated with the pair (key, timestamp) if it exists.
+   * <p>
+   * If the timestamp is not found or the key does not exist, a special 'nil' value is returned.
+   * <p>
+   * <b>Time complexity:</b> O(1)
+   * @param key
+   * @param timestamp
+   * @return Bulk reply
+   */
+  @Override
+  public byte[] tsget(final byte[] key, final byte[] timestamp) {
+    checkIsInMultiOrPipeline();
+    client.tsget(key, timestamp);
+    return client.getBinaryBulkReply();
+  }
+
+  /**
+   * Add the specified member having the specified score to the sorted set stored at key. If member
    * is already a member of the sorted set the score is updated, and the element reinserted in the
    * right position to ensure sorting. If key does not exist a new sorted set with the specified
    * member as sole member is crated. If the key exists but does not hold a sorted set value an

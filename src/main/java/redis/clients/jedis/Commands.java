@@ -153,6 +153,13 @@ public interface Commands {
 
   public void zadd(final String key, final double score, final String member);
 
+  public void tsadd(final String key, final Map<Long, String> timeseries);
+
+  public void tsadd(final String key, final Map<Long, String> timeseries,
+                    final String expire_cmd, final long expire_time);
+
+  public void tsget(final String key, final long timestamp);
+
   public void zadd(final String key, final double score, final String member,
       final ZAddParams params);
 

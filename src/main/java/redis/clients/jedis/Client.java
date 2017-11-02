@@ -350,6 +350,31 @@ public class Client extends BinaryClient implements Commands {
     srandmember(SafeEncoder.encode(key));
   }
 
+  @Override
+  public void tsadd(final String key, final Map<Long, String> timeseries) {
+    final Map<byte[], byte[]> btimeseries = new HashMap<byte[], byte[]>(timeseries.size());
+    for (final Entry<Long, String> entry : timeseries.entrySet()) {
+      btimeseries.put(toByteArray(entry.getKey()), SafeEncoder.encode(entry.getValue()));
+    }
+    tsadd(SafeEncoder.encode(key), btimeseries);
+  }
+
+  @Override
+  public void tsadd(final String key, final Map<Long, String> timeseries,
+                    final String expire_cmd, final long expire_time) {
+    final Map<byte[], byte[]> btimeseries = new HashMap<byte[], byte[]>(timeseries.size());
+    for (final Entry<Long, String> entry : timeseries.entrySet()) {
+      btimeseries.put(toByteArray(entry.getKey()), SafeEncoder.encode(entry.getValue()));
+    }
+    tsadd(SafeEncoder.encode(key), btimeseries, SafeEncoder.encode(expire_cmd),
+          toByteArray(expire_time));
+  }
+
+  @Override
+  public void tsget(final String key, final long timestamp) {
+    tsget(SafeEncoder.encode(key), toByteArray(timestamp));
+  }
+
   public void zadd(final String key, final double score, final String member) {
     zadd(SafeEncoder.encode(key), score, SafeEncoder.encode(member));
   }
@@ -873,7 +898,7 @@ public class Client extends BinaryClient implements Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void hscan(final String key, int cursor, final ScanParams params) {
     hscan(SafeEncoder.encode(key), cursor, params);
@@ -883,7 +908,7 @@ public class Client extends BinaryClient implements Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void sscan(final String key, int cursor, final ScanParams params) {
     sscan(SafeEncoder.encode(key), cursor, params);
@@ -893,7 +918,7 @@ public class Client extends BinaryClient implements Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void zscan(final String key, int cursor, final ScanParams params) {
     zscan(SafeEncoder.encode(key), cursor, params);
