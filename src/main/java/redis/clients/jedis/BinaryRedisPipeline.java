@@ -146,6 +146,8 @@ public interface BinaryRedisPipeline {
 
   Response<byte[]> tsget(byte[] key, byte[] timestamp);
 
+  Response<byte[]> tsrem(byte[] key, byte[]... timestamps);
+
   Response<Long> zadd(byte[] key, double score, byte[] member);
 
   Response<Long> zadd(byte[] key, double score, byte[] member, ZAddParams params);

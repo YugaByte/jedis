@@ -142,6 +142,8 @@ public interface JedisCommands {
 
   String tsget(String key, long timestamp);
 
+  String tsrem(String key, long... timestamps);
+
   Long zadd(String key, double score, String member);
 
   Long zadd(String key, double score, String member, ZAddParams params);

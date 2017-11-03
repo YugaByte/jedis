@@ -144,6 +144,8 @@ public interface RedisPipeline {
 
   Response<String> tsget(String key, long timestamp);
 
+  Response<String> tsrem(String key, long... timestamps);
+
   Response<Long> zadd(String key, double score, String member);
 
   Response<Long> zadd(String key, double score, String member, ZAddParams params);

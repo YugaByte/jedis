@@ -415,6 +415,12 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     return j.tsget(key, timestamp);
   }
 
+  @Override
+  public String tsrem(String key, long... timestamps) {
+    Jedis j = getShard(key);
+    return j.tsrem(key, timestamps);
+  }
+
   public Long zadd(String key, double score, String member) {
     Jedis j = getShard(key);
     return j.zadd(key, score, member);

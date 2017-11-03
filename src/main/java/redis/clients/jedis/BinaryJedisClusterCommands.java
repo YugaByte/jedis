@@ -134,6 +134,8 @@ public interface BinaryJedisClusterCommands {
 
   byte[] tsget(byte[] key, byte[] timestamp);
 
+  byte[] tsrem(byte[] key, byte[]... timestamps);
+  
   Long zadd(byte[] key, double score, byte[] member);
 
   Long zadd(byte[] key, Map<byte[], Double> scoreMembers);

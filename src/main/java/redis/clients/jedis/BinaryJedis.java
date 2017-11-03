@@ -1594,6 +1594,21 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   }
 
   /**
+   * Removes the timestamp and its associated value if it exists.
+   * <p>
+   * <b>Time complexity:</b> O(1)
+   * @param key
+   * @param timestamps
+   * @return Status code reply
+   */
+  @Override
+  public byte[] tsrem(final byte[] key, final byte[]... timestamps) {
+    checkIsInMultiOrPipeline();
+    client.tsrem(key, timestamps);
+    return client.getBinaryBulkReply();
+  }
+
+  /**
    * Add the specified member having the specified score to the sorted set stored at key. If member
    * is already a member of the sorted set the score is updated, and the element reinserted in the
    * right position to ensure sorting. If key does not exist a new sorted set with the specified
