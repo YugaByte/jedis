@@ -744,6 +744,14 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
   }
 
   @Override
+  public String tsrem(final String key, final long... timestamps) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) { return connection.tsrem(key, timestamps); }
+    }.run(key);
+  }
+
+  @Override
   public Long zadd(final String key, final double score, final String member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
       @Override

@@ -706,8 +706,20 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
   }
 
   @Override
+  public Response<String> tsrem(String key, long... timestamps) {
+    getClient(key).tsrem(key, timestamps);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  @Override
   public Response<byte[]> tsget(byte[] key, byte[] timestamp) {
     getClient(key).tsget(key, timestamp);
+    return getResponse(BuilderFactory.BYTE_ARRAY);
+  }
+
+  @Override
+  public Response<byte[]> tsrem(byte[] key, byte[]... timestamps) {
+    getClient(key).tsrem(key, timestamps);
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 

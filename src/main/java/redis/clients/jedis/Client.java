@@ -375,6 +375,15 @@ public class Client extends BinaryClient implements Commands {
     tsget(SafeEncoder.encode(key), toByteArray(timestamp));
   }
 
+  @Override
+  public void tsrem(final String key, final long... timestamps) {
+    byte[][] byte_timestamps = new byte[timestamps.length][];
+    for (int i = 0; i < timestamps.length; i++) {
+      byte_timestamps[i] = toByteArray(timestamps[i]);
+    }
+    tsrem(SafeEncoder.encode(key), byte_timestamps);
+  }
+
   public void zadd(final String key, final double score, final String member) {
     zadd(SafeEncoder.encode(key), score, SafeEncoder.encode(member));
   }

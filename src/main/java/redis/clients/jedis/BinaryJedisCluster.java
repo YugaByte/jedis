@@ -688,6 +688,14 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
   }
 
   @Override
+  public byte[] tsrem(final byte[] key, final byte[]... timestamps) {
+    return new JedisClusterCommand<byte[]>(connectionHandler, maxAttempts) {
+      @Override
+      public byte[] execute(Jedis connection) { return connection.tsrem(key, timestamps); }
+    }.runBinary(key);
+  }
+
+  @Override
   public Long zadd(final byte[] key, final double score, final byte[] member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
       @Override

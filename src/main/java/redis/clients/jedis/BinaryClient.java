@@ -436,6 +436,10 @@ public class BinaryClient extends Connection {
     sendCommand(TSGET, key, timestamp);
   }
 
+  public void tsrem(final byte[] key, final byte[]... timestamps) {
+    sendCommand(TSREM, joinParameters(key, timestamps));
+  }
+
   public void zadd(final byte[] key, final double score, final byte[] member) {
     sendCommand(ZADD, key, toByteArray(score), member);
   }

@@ -159,6 +159,8 @@ public interface Commands {
                     final String expire_cmd, final long expire_time);
 
   public void tsget(final String key, final long timestamp);
+  
+  public void tsrem(final String key, final long... timestamps);
 
   public void zadd(final String key, final double score, final String member,
       final ZAddParams params);
