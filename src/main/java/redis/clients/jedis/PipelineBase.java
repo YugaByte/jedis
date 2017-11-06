@@ -723,6 +723,25 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.BYTE_ARRAY);
   }
 
+  public Response<List<String>> tsrangeByTime(String key, long min, long max) {
+    getClient(key).tsrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<byte[]>> tsrangeByTime(byte[] key, long min, long max) {
+    return tsrangeByTime(key, toByteArray(min), toByteArray(max));
+  }
+
+  public Response<List<String>> tsrangeByTime(String key, String min, String max) {
+    getClient(key).tsrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<byte[]>> tsrangeByTime(byte[] key, byte[] min, byte[] max) {
+    getClient(key).tsrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
+  }
+
   public Response<Long> zadd(String key, double score, String member) {
     getClient(key).zadd(key, score, member);
     return getResponse(BuilderFactory.LONG);

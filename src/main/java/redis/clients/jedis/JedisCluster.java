@@ -751,6 +751,25 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
     }.run(key);
   }
 
+  public List<String> tsrangeByTime(final String key, final long min, final long max) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrangeByTime(key, min, max);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public List<String> tsrangeByTime(final String key, final String min, final String max) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrangeByTime(key, min, max);
+      }
+    }.run(key);
+  }
+
   @Override
   public Long zadd(final String key, final double score, final String member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
@@ -1297,7 +1316,7 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
       throw new IllegalArgumentException(JedisCluster.class.getSimpleName() + " only supports SCAN commands with MATCH patterns containing hash-tags ( curly-brackets enclosed strings )");
     }
   }
-  
+
   @Override
   public Long bitpos(final String key, final boolean value) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {

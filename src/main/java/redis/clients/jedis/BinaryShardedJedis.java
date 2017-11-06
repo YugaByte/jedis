@@ -370,6 +370,16 @@ public class BinaryShardedJedis extends Sharded<Jedis, JedisShardInfo> implement
     return j.tsrem(key, timestamps);
   }
 
+  public List<byte[]> tsrangeByTime(byte[] key, long min, long max) {
+    Jedis j = getShard(key);
+    return j.tsrangeByTime(key, min, max);
+  }
+
+  public List<byte[]> tsrangeByTime(byte[] key, byte[] min, byte[] max) {
+    Jedis j = getShard(key);
+    return j.tsrangeByTime(key, min, max);
+  }
+
   public Long zadd(byte[] key, double score, byte[] member) {
     Jedis j = getShard(key);
     return j.zadd(key, score, member);

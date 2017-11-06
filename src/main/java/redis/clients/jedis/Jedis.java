@@ -1438,6 +1438,57 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   }
 
   /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max).
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSRANGEBYTIME k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSRANGEBYTIME k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrangeByTime(String, long, long)
+   * @see #tsrangeByTime(String, String, String)
+   * @param key
+   * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
+   * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   */
+  public List<String> tsrangeByTime(final String key, final long min, final long max) {
+    checkIsInMultiOrPipeline();
+    client.tsrangeByTime(key, min, max);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  public List<String> tsrangeByTime(final String key, final String min, final String max) {
+    checkIsInMultiOrPipeline();
+    client.tsrangeByTime(key, min, max);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  /**
    * Add the specified member having the specified score to the sorted set stored at key. If member
    * is already a member of the sorted set the score is updated, and the element reinserted in the
    * right position to ensure sorting. If key does not exist a new sorted set with the specified
@@ -3133,7 +3184,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> scan(int cursor) {
     return scan(cursor, new ScanParams());
@@ -3143,7 +3194,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> scan(int cursor, final ScanParams params) {
     checkIsInMultiOrPipeline();
@@ -3162,7 +3213,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Map.Entry<String, String>> hscan(final String key, int cursor) {
     return hscan(key, cursor, new ScanParams());
@@ -3172,7 +3223,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Map.Entry<String, String>> hscan(final String key, int cursor,
       final ScanParams params) {
@@ -3194,7 +3245,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> sscan(final String key, int cursor) {
     return sscan(key, cursor, new ScanParams());
@@ -3204,7 +3255,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<String> sscan(final String key, int cursor, final ScanParams params) {
     checkIsInMultiOrPipeline();
@@ -3223,7 +3274,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Tuple> zscan(final String key, int cursor) {
     return zscan(key, cursor, new ScanParams());
@@ -3233,7 +3284,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public ScanResult<Tuple> zscan(final String key, int cursor, final ScanParams params) {
     checkIsInMultiOrPipeline();

@@ -384,6 +384,15 @@ public class Client extends BinaryClient implements Commands {
     tsrem(SafeEncoder.encode(key), byte_timestamps);
   }
 
+  public void tsrangeByTime(final String key, final long min, final long max) {
+    tsrangeByTime(SafeEncoder.encode(key), toByteArray(min), toByteArray(max));
+  }
+
+  @Override
+  public void tsrangeByTime(final String key, final String min, final String max) {
+    tsrangeByTime(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+  }
+
   public void zadd(final String key, final double score, final String member) {
     zadd(SafeEncoder.encode(key), score, SafeEncoder.encode(member));
   }

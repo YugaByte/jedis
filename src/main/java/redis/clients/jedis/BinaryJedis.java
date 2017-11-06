@@ -1478,14 +1478,14 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * Return the difference between the Set stored at key1 and all the Sets key2, ..., keyN
    * <p>
    * <b>Example:</b>
-   * 
+   *
    * <pre>
    * key1 = [x, a, b, c]
    * key2 = [c]
    * key3 = [a, d]
    * SDIFF key1,key2,key3 =&gt; [x, b]
    * </pre>
-   * 
+   *
    * Non existing keys are considered like empty sets.
    * <p>
    * <b>Time complexity:</b>
@@ -1606,6 +1606,47 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     checkIsInMultiOrPipeline();
     client.tsrem(key, timestamps);
     return client.getBinaryBulkReply();
+  }
+
+  /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max).
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSRANGEBYTIME k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSRANGEBYTIME k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrangeByTime(byte[], long, long)
+   * @see #tsrangeByTime(byte[], byte[], byte[])
+   * @param key
+   * @param min
+   * @param max
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   */
+  public List<byte[]> tsrangeByTime(final byte[] key, final long min, final long max) {
+    return tsrangeByTime(key, toByteArray(min), toByteArray(max));
+  }
+
+  public List<byte[]> tsrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
+    checkIsInMultiOrPipeline();
+    client.tsrangeByTime(key, min, max);
+    return client.getBinaryMultiBulkReply();
   }
 
   /**
@@ -1904,65 +1945,65 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * <b>examples:</b>
    * <p>
    * Given are the following sets and key/values:
-   * 
+   *
    * <pre>
    * x = [1, 2, 3]
    * y = [a, b, c]
-   * 
+   *
    * k1 = z
    * k2 = y
    * k3 = x
-   * 
+   *
    * w1 = 9
    * w2 = 8
    * w3 = 7
    * </pre>
-   * 
+   *
    * Sort Order:
-   * 
+   *
    * <pre>
    * sort(x) or sort(x, sp.asc())
    * -&gt; [1, 2, 3]
-   * 
+   *
    * sort(x, sp.desc())
    * -&gt; [3, 2, 1]
-   * 
+   *
    * sort(y)
    * -&gt; [c, a, b]
-   * 
+   *
    * sort(y, sp.alpha())
    * -&gt; [a, b, c]
-   * 
+   *
    * sort(y, sp.alpha().desc())
    * -&gt; [c, a, b]
    * </pre>
-   * 
+   *
    * Limit (e.g. for Pagination):
-   * 
+   *
    * <pre>
    * sort(x, sp.limit(0, 2))
    * -&gt; [1, 2]
-   * 
+   *
    * sort(y, sp.alpha().desc().limit(1, 2))
    * -&gt; [b, a]
    * </pre>
-   * 
+   *
    * Sorting by external keys:
-   * 
+   *
    * <pre>
    * sort(x, sb.by(w*))
    * -&gt; [3, 2, 1]
-   * 
+   *
    * sort(x, sb.by(w*).desc())
    * -&gt; [1, 2, 3]
    * </pre>
-   * 
+   *
    * Getting external keys:
-   * 
+   *
    * <pre>
    * sort(x, sp.by(w*).get(k*))
    * -&gt; [x, y, z]
-   * 
+   *
    * sort(x, sp.by(w*).get(#).get(k*))
    * -&gt; [3, x, 2, y, 1, z]
    * </pre>
@@ -2847,7 +2888,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * <b>Format of the returned String:</b>
    * <p>
    * All the fields are in the form field:value
-   * 
+   *
    * <pre>
    * edis_version:0.07
    * connected_clients:1
@@ -2860,7 +2901,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * uptime_in_seconds:25
    * uptime_in_days:0
    * </pre>
-   * 
+   *
    * <b>Notes</b>
    * <p>
    * used_memory is returned in bytes, and is the total number of bytes allocated by the program
@@ -2938,7 +2979,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * are reported as a list of key-value pairs.
    * <p>
    * <b>Example:</b>
-   * 
+   *
    * <pre>
    * $ redis-cli config get '*'
    * 1. "dbfilename"
@@ -2953,7 +2994,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * 10. "everysec"
    * 11. "save"
    * 12. "3600 1 300 100 60 10000"
-   * 
+   *
    * $ redis-cli config get 'm*'
    * 1. "masterauth"
    * 2. (nil)
