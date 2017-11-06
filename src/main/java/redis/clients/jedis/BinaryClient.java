@@ -71,7 +71,7 @@ public class BinaryClient extends Connection {
   public boolean isInWatch() {
     return isInWatch;
   }
-  
+
   private byte[][] joinParameters(byte[] first, byte[][] rest) {
     byte[][] result = new byte[rest.length + 1][];
     result[0] = first;
@@ -438,6 +438,18 @@ public class BinaryClient extends Connection {
 
   public void tsrem(final byte[] key, final byte[]... timestamps) {
     sendCommand(TSREM, joinParameters(key, timestamps));
+  }
+
+  public void tsrangeByTime(final byte[] key, final long min, final long max) {
+    sendCommand(TSRANGEBYTIME, key, toByteArray(min), toByteArray(max));
+  }
+
+  public void tsrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
+    sendCommand(TSRANGEBYTIME, key, min, max);
+  }
+
+  public void tsrangeByTime(final byte[] key, final String min, final String max) {
+    sendCommand(TSRANGEBYTIME, key, min.getBytes(), max.getBytes());
   }
 
   public void zadd(final byte[] key, final double score, final byte[] member) {
@@ -1199,7 +1211,7 @@ public class BinaryClient extends Connection {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void hscan(final byte[] key, int cursor, final ScanParams params) {
     final List<byte[]> args = new ArrayList<byte[]>();
@@ -1213,7 +1225,7 @@ public class BinaryClient extends Connection {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void sscan(final byte[] key, int cursor, final ScanParams params) {
     final List<byte[]> args = new ArrayList<byte[]>();
@@ -1227,7 +1239,7 @@ public class BinaryClient extends Connection {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void zscan(final byte[] key, int cursor, final ScanParams params) {
     final List<byte[]> args = new ArrayList<byte[]>();

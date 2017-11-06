@@ -144,6 +144,10 @@ public interface JedisCommands {
 
   String tsrem(String key, long... timestamps);
 
+  List<String> tsrangeByTime(String key, long min, long max);
+
+  List<String> tsrangeByTime(String key, String min, String max);
+
   Long zadd(String key, double score, String member);
 
   Long zadd(String key, double score, String member, ZAddParams params);
@@ -274,7 +278,7 @@ public interface JedisCommands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   ScanResult<Map.Entry<String, String>> hscan(final String key, int cursor);
 
@@ -282,7 +286,7 @@ public interface JedisCommands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   ScanResult<String> sscan(final String key, int cursor);
 
@@ -290,7 +294,7 @@ public interface JedisCommands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   ScanResult<Tuple> zscan(final String key, int cursor);
 

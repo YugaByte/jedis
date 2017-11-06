@@ -162,6 +162,10 @@ public interface Commands {
   
   public void tsrem(final String key, final long... timestamps);
 
+  public void tsrangeByTime(final String key, final long min, final long max);
+
+  public void tsrangeByTime(final String key, final String min, final String max);
+
   public void zadd(final String key, final double score, final String member,
       final ZAddParams params);
 
@@ -309,7 +313,7 @@ public interface Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void scan(int cursor, final ScanParams params);
 
@@ -317,7 +321,7 @@ public interface Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void hscan(final String key, int cursor, final ScanParams params);
 
@@ -325,7 +329,7 @@ public interface Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void sscan(final String key, int cursor, final ScanParams params);
 
@@ -333,7 +337,7 @@ public interface Commands {
   /**
    * This method is deprecated due to bug (scan cursor should be unsigned long)
    * And will be removed on next major release
-   * @see https://github.com/xetorthio/jedis/issues/531 
+   * @see https://github.com/xetorthio/jedis/issues/531
    */
   public void zscan(final String key, int cursor, final ScanParams params);
 

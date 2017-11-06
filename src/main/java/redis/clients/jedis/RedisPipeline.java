@@ -146,6 +146,10 @@ public interface RedisPipeline {
 
   Response<String> tsrem(String key, long... timestamps);
 
+  Response<List<String>> tsrangeByTime(String key, long min, long max);
+
+  Response<List<String>> tsrangeByTime(String key, String min, String max);
+
   Response<Long> zadd(String key, double score, String member);
 
   Response<Long> zadd(String key, double score, String member, ZAddParams params);
@@ -225,7 +229,7 @@ public interface RedisPipeline {
   Response<Long> pfadd(final String key, final String... elements);
 
   Response<Long> pfcount(final String key);
-  
+
   Response<List<Long>> bitfield(String key, String... arguments);
 
   // Geo Commands

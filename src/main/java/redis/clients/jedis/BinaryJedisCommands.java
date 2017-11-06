@@ -147,6 +147,10 @@ public interface BinaryJedisCommands {
 
   byte[] tsrem(byte[] key, byte[]... timestamps);
 
+  List<byte[]> tsrangeByTime(byte[] key, long min, long max);
+
+  List<byte[]> tsrangeByTime(byte[] key, byte[] min, byte[] max);
+
   Long zadd(byte[] key, double score, byte[] member);
 
   Long zadd(byte[] key, double score, byte[] member, ZAddParams params);
@@ -312,5 +316,5 @@ public interface BinaryJedisCommands {
    * @param arguments
    */
   List<Long> bitfield(final byte[] key, final byte[]... arguments);
-  
+
 }
