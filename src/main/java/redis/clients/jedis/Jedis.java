@@ -1483,6 +1483,9 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
    * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
    * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
    * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [10, "v1", 20, "v2", 30, "v3].
    */
   public List<String> tsrangeByTime(final String key, final long min, final long max) {
     checkIsInMultiOrPipeline();

@@ -1654,6 +1654,9 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @param min
    * @param max
    * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [10, "v1", 20, "v2", 30, "v3].
    */
   public List<byte[]> tsrangeByTime(final byte[] key, final long min, final long max) {
     return tsrangeByTime(key, toByteArray(min), toByteArray(max));
