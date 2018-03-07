@@ -1384,8 +1384,18 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.STRING);
   }
 
+  public Response<String> set(String key, String value, String expx, int time) {
+    getClient(key).set(key, value, expx, time);
+    return getResponse(BuilderFactory.STRING);
+  }
+
   public Response<String> set(byte[] key, byte[] value, byte[] nxxx, byte[] expx, int time) {
     getClient(key).set(key, value, nxxx, expx, time);
+    return getResponse(BuilderFactory.STRING);
+  }
+
+  public Response<String> set(byte[] key, byte[] value, byte[] expx, int time) {
+    getClient(key).set(key, value, expx, time);
     return getResponse(BuilderFactory.STRING);
   }
 
