@@ -29,6 +29,8 @@ public interface Commands {
   public void set(final String key, final String value, final String nxxx, final String expx,
       final long time);
 
+  public void set(final String key, final String value, final String expx, final long time);
+
   public void get(final String key);
 
   public void exists(final String key);

@@ -69,6 +69,10 @@ public class Client extends BinaryClient implements Commands {
       SafeEncoder.encode(expx), time);
   }
 
+  public void set(final String key, final String value, final String expx, final long time) {
+    set(SafeEncoder.encode(key), SafeEncoder.encode(value), SafeEncoder.encode(expx), time);
+  }
+
   public void get(final String key) {
     get(SafeEncoder.encode(key));
   }
@@ -905,6 +909,10 @@ public class Client extends BinaryClient implements Commands {
       final int time) {
     set(SafeEncoder.encode(key), SafeEncoder.encode(value), SafeEncoder.encode(nxxx),
       SafeEncoder.encode(expx), time);
+  }
+
+  public void set(final String key, final String value, final String expx, final int time) {
+    set(SafeEncoder.encode(key), SafeEncoder.encode(value), SafeEncoder.encode(expx), time);
   }
 
   public void srandmember(final String key, final int count) {
