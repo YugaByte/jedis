@@ -439,6 +439,11 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     return j.tsrem(key, timestamps);
   }
 
+  public List<String> tsLastN(String key, int limit) {
+    Jedis j = getShard(key);
+    return j.tsLastN(key, limit);
+  }
+
   public List<String> tsrangeByTime(String key, long min, long max) {
     Jedis j = getShard(key);
     return j.tsrangeByTime(key, min, max);

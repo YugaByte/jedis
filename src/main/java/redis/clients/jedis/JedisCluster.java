@@ -767,6 +767,16 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
     }.run(key);
   }
 
+  @Override
+  public List<String> tsLastN(final String key, final int limit) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsLastN(key, limit);
+      }
+    }.run(key);
+  }
+
   public List<String> tsrangeByTime(final String key, final long min, final long max) {
     return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
       @Override

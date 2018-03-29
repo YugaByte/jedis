@@ -160,6 +160,8 @@ public interface JedisCommands {
 
   String tsrem(String key, long... timestamps);
 
+  List<String> tsLastN(String key, int limit);
+
   List<String> tsrangeByTime(String key, long min, long max);
 
   List<String> tsrangeByTime(String key, String min, String max);

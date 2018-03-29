@@ -711,6 +711,14 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
     }.runBinary(key);
   }
 
+  @Override
+  public List<byte[]> tsLastN(final byte[] key, final byte[] limit) {
+    return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<byte[]> execute(Jedis connection) { return connection.tsLastN(key, limit); }
+    }.runBinary(key);
+  }
+
   public List<byte[]> tsrangeByTime(final byte[] key, final long min, final long max) {
     return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
       @Override

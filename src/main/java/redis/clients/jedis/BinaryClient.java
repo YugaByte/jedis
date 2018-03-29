@@ -460,6 +460,10 @@ public class BinaryClient extends Connection {
     sendCommand(TSREM, joinParameters(key, timestamps));
   }
 
+  public void tsLastN(final byte[] key, final byte[] limit) {
+    sendCommand(TSLASTN, key, limit);
+  }
+
   public void tsrangeByTime(final byte[] key, final long min, final long max) {
     sendCommand(TSRANGEBYTIME, key, toByteArray(min), toByteArray(max));
   }

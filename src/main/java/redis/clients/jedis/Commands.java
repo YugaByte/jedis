@@ -180,6 +180,8 @@ public interface Commands {
 
   public void tsrem(final String key, final long... timestamps);
 
+  public void tsLastN(final String key, final int limit);
+
   public void tsrangeByTime(final String key, final long min, final long max);
 
   public void tsrangeByTime(final String key, final String min, final String max);

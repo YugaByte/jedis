@@ -1625,6 +1625,25 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   }
 
   /**
+   * Return the latest N elements in the given time series.
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @param key
+   * @param limit the number of elements to return
+   * @return Multi bulk reply with a list of latest N elements.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [10, "v1", 20, "v2", 30, "v3].
+   */
+  public List<byte[]> tsLastN(final byte[] key, final byte[] limit) {
+    checkIsInMultiOrPipeline();
+    client.tsLastN(key, limit);
+    return client.getBinaryMultiBulkReply();
+  }
+
+  /**
    * Return all the elements in the map stored at key with a timestamp between min and max
    * (including elements with a timestamp equal to min or max).
    * <p>

@@ -404,6 +404,10 @@ public class Client extends BinaryClient implements Commands {
     tsrem(SafeEncoder.encode(key), byte_timestamps);
   }
 
+  public void tsLastN(final String key, final int limit) {
+    tsLastN(SafeEncoder.encode(key), toByteArray(limit));
+  }
+
   public void tsrangeByTime(final String key, final long min, final long max) {
     tsrangeByTime(SafeEncoder.encode(key), toByteArray(min), toByteArray(max));
   }

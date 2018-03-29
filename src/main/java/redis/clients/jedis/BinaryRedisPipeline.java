@@ -164,6 +164,8 @@ public interface BinaryRedisPipeline {
 
   Response<byte[]> tsrem(byte[] key, byte[]... timestamps);
 
+  Response<List<byte[]>> tsLastN(byte[] key, byte[] limit);
+
   Response<List<byte[]>> tsrangeByTime(byte[] key, long min, long max);
 
   Response<List<byte[]>> tsrangeByTime(byte[] key, byte[] min, byte[] max);

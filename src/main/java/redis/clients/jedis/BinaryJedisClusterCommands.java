@@ -152,6 +152,8 @@ public interface BinaryJedisClusterCommands {
 
   byte[] tsrem(byte[] key, byte[]... timestamps);
 
+  List<byte[]> tsLastN(byte[] key, byte[] limit);
+
   List<byte[]> tsrangeByTime(byte[] key, long min, long max);
 
   List<byte[]> tsrangeByTime(byte[] key, byte[] min, byte[] max);

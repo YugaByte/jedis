@@ -163,6 +163,8 @@ public interface RedisPipeline {
 
   Response<String> tsrem(String key, long... timestamps);
 
+  Response<List<String>> tsLastN(String key, int limit);
+
   Response<List<String>> tsrangeByTime(String key, long min, long max);
 
   Response<List<String>> tsrangeByTime(String key, String min, String max);
