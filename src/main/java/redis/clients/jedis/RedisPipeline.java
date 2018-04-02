@@ -179,6 +179,8 @@ public interface RedisPipeline {
 
   Response<Long> zcard(String key);
 
+  Response<Long> tscard(String key);
+
   Response<Long> zcount(String key, double min, double max);
 
   Response<Double> zincrby(String key, double score, String member);

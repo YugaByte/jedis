@@ -477,6 +477,11 @@ public class BinaryShardedJedis extends Sharded<Jedis, JedisShardInfo> implement
     return j.zcard(key);
   }
 
+  public Long tscard(byte[] key) {
+    Jedis j = getShard(key);
+    return j.tscard(key);
+  }
+
   public Double zscore(byte[] key, byte[] member) {
     Jedis j = getShard(key);
     return j.zscore(key, member);

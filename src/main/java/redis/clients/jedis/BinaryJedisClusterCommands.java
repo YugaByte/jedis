@@ -186,6 +186,8 @@ public interface BinaryJedisClusterCommands {
 
   Long zcard(byte[] key);
 
+  Long tscard(byte[] key);
+
   Double zscore(byte[] key, byte[] member);
 
   List<byte[]> sort(byte[] key);

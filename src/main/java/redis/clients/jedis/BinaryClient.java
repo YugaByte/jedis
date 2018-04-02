@@ -547,6 +547,10 @@ public class BinaryClient extends Connection {
     sendCommand(ZCARD, key);
   }
 
+  public void tscard(final byte[] key) {
+    sendCommand(TSCARD, key);
+  }
+
   public void zscore(final byte[] key, final byte[] member) {
     sendCommand(ZSCORE, key, member);
   }

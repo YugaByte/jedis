@@ -214,6 +214,8 @@ public interface Commands {
 
   public void zcard(final String key);
 
+  public void tscard(final String key);
+
   public void zscore(final String key, final String member);
 
   public void watch(final String... keys);

@@ -482,6 +482,10 @@ public class Client extends BinaryClient implements Commands {
     zcard(SafeEncoder.encode(key));
   }
 
+  public void tscard(final String key) {
+    tscard(SafeEncoder.encode(key));
+  }
+
   public void zscore(final String key, final String member) {
     zscore(SafeEncoder.encode(key), SafeEncoder.encode(member));
   }

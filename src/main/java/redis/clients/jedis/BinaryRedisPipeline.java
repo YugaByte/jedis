@@ -180,6 +180,8 @@ public interface BinaryRedisPipeline {
 
   Response<Long> zcard(byte[] key);
 
+  Response<Long> tscard(byte[] key);
+
   Response<Long> zcount(byte[] key, double min, double max);
 
   Response<Double> zincrby(byte[] key, double score, byte[] member);

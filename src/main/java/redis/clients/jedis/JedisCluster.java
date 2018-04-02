@@ -939,6 +939,16 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
   }
 
   @Override
+  public Long tscard(final String key) {
+    return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {
+      @Override
+      public Long execute(Jedis connection) {
+        return connection.tscard(key);
+      }
+    }.run(key);
+  }
+
+  @Override
   public Double zscore(final String key, final String member) {
     return new JedisClusterCommand<Double>(connectionHandler, maxAttempts) {
       @Override

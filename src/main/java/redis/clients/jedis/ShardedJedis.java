@@ -530,6 +530,11 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     return j.zcard(key);
   }
 
+  public Long tscard(String key) {
+    Jedis j = getShard(key);
+    return j.tscard(key);
+  }
+
   public Double zscore(String key, String member) {
     Jedis j = getShard(key);
     return j.zscore(key, member);

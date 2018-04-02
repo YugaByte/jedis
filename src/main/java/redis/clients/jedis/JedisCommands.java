@@ -194,6 +194,8 @@ public interface JedisCommands {
 
   Long zcard(String key);
 
+  Long tscard(String key);
+
   Double zscore(String key, String member);
 
   List<String> sort(String key);

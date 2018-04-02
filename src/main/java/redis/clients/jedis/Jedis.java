@@ -1734,6 +1734,20 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   }
 
   /**
+   * Return the time series cardinality (number of elements). If the key does not exist 0 is
+   * returned, like for empty time series.
+   * <p>
+   * Time complexity O(1)
+   * @param key
+   * @return the cardinality (number of elements) of the time series as an integer.
+   */
+  public Long tscard(final String key) {
+    checkIsInMultiOrPipeline();
+    client.tscard(key);
+    return client.getIntegerReply();
+  }
+
+  /**
    * Return the score of the specified element of the sorted set at key. If the specified element
    * does not exist in the sorted set, or the key does not exist at all, a special 'nil' value is
    * returned.
