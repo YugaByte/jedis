@@ -29,10 +29,6 @@ import redis.clients.jedis.*;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.util.SafeEncoder;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-
 public class PipeliningTest {
   private static HostAndPort hnp = HostAndPortUtil.getRedisServers().get(0);
 

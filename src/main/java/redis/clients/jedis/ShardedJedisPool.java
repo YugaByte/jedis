@@ -40,7 +40,7 @@ public class ShardedJedisPool extends Pool<ShardedJedis> {
 
   /**
    * @deprecated starting from Jedis 3.0 this method will not be exposed. Resource cleanup should be
-   *             done using @see {@link redis.clients.jedis.Jedis#close()}
+   *             done using @see {@link Jedis#close()}
    */
   @Override
   @Deprecated
@@ -52,7 +52,7 @@ public class ShardedJedisPool extends Pool<ShardedJedis> {
 
   /**
    * @deprecated starting from Jedis 3.0 this method will not be exposed. Resource cleanup should be
-   *             done using @see {@link redis.clients.jedis.Jedis#close()}
+   *             done using @see {@link Jedis#close()}
    */
   @Override
   @Deprecated

@@ -30,6 +30,8 @@ import redis.clients.jedis.params.sortedset.ZIncrByParams;
 public interface JedisCommands {
   String set(String key, String value);
 
+  String set(String key, String value, String expx, long time);
+
   String set(String key, String value, String nxxx, String expx, long time);
 
   String set(String key, String value, String nxxx);

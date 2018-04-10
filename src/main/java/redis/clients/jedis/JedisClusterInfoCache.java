@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -19,6 +21,7 @@ import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.util.SafeEncoder;
 
 public class JedisClusterInfoCache {
+  private final List<String> nodeKeys = new ArrayList<String>();
   private final Map<String, JedisPool> nodes = new HashMap<String, JedisPool>();
   private final Map<Integer, JedisPool> slots = new HashMap<Integer, JedisPool>();
 
@@ -46,12 +49,11 @@ public class JedisClusterInfoCache {
     this.password = password;
   }
 
-  public void discoverClusterNodesAndSlots(Jedis jedis) {
+  public void discoverClusterNodesAndSlots(List<Object> slots) {
     w.lock();
 
     try {
       reset();
-      List<Object> slots = jedis.clusterSlots();
 
       for (Object slotInfoObj : slots) {
         List<Object> slotInfo = (List<Object>) slotInfoObj;
@@ -148,6 +150,32 @@ public class JedisClusterInfoCache {
         ((Long) hostInfos.get(1)).intValue());
   }
 
+  public void renewClusterNodes(Set<HostAndPort> newNodes, boolean includeOnlyLiveNodes) {
+    w.lock();
+    try {
+      reset();
+      for (HostAndPort node : newNodes) {
+        String nodeKey = getNodeKey(node);
+        JedisPool existingPool = nodes.get(nodeKey);
+        if (existingPool == null) {
+          JedisPool nodePool = new JedisPool(poolConfig, node.getHost(), node.getPort(),
+              connectionTimeout, soTimeout, password, 0, null, false, null, null, null);
+
+          try {
+            if (includeOnlyLiveNodes && nodePool.getResource().ping().equalsIgnoreCase("pong")) {
+              nodes.put(nodeKey, nodePool);
+              nodeKeys.add(nodeKey);
+            }
+          } catch (JedisException e) {
+            // Could not ping -> ignore this node for now.
+          }
+        }
+      }
+    } finally {
+      w.unlock();
+    }
+  }
+
   public JedisPool setupNodeIfNotExist(HostAndPort node) {
     w.lock();
     try {
@@ -158,6 +186,7 @@ public class JedisClusterInfoCache {
       JedisPool nodePool = new JedisPool(poolConfig, node.getHost(), node.getPort(),
           connectionTimeout, soTimeout, password, 0, null, false, null, null, null);
       nodes.put(nodeKey, nodePool);
+      nodeKeys.add(nodeKey);
       return nodePool;
     } finally {
       w.unlock();
@@ -174,6 +203,7 @@ public class JedisClusterInfoCache {
       JedisPool nodePool = new JedisPool(poolConfig, node.getHost(), node.getPort(),
           connectionTimeout, soTimeout, password, 0, null, ssl, null, null, null);
       nodes.put(nodeKey, nodePool);
+      nodeKeys.add(nodeKey);
       return nodePool;
     } finally {
       w.unlock();
@@ -192,6 +222,7 @@ public class JedisClusterInfoCache {
           connectionTimeout, soTimeout, password, 0, null, ssl, sslSocketFactory, sslParameters,
           hostnameVerifier);
       nodes.put(nodeKey, nodePool);
+      nodeKeys.add(nodeKey);
       return nodePool;
     } finally {
       w.unlock();
@@ -248,6 +279,26 @@ public class JedisClusterInfoCache {
     }
   }
 
+  public String getNodeKey(int idx) {
+    r.lock();
+    try {
+      return nodeKeys.get(idx);
+    } finally {
+      r.unlock();
+    }
+  }
+
+  public String getRandomNodeKey(Random random) {
+    r.lock();
+    try {
+      int idx = random.nextInt(nodeKeys.size());
+      return nodeKeys.get(idx);
+    } finally {
+      r.unlock();
+    }
+  }
+
+
   public List<JedisPool> getShuffledNodesPool() {
     r.lock();
     try {
@@ -274,6 +325,7 @@ public class JedisClusterInfoCache {
           // pass
         }
       }
+      nodeKeys.clear();
       nodes.clear();
       slots.clear();
     } finally {

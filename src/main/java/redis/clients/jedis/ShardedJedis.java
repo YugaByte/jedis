@@ -29,10 +29,8 @@ import java.util.regex.Pattern;
 
 import redis.clients.util.Pool;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
-import redis.clients.util.Hashing;
 
 public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, Closeable {
 
@@ -57,6 +55,12 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
   public String set(String key, String value) {
     Jedis j = getShard(key);
     return j.set(key, value);
+  }
+
+  @Override
+  public String set(String key, String value, String expx, long time) {
+    Jedis j = getShard(key);
+    return j.set(key, value, expx, time);
   }
 
   @Override

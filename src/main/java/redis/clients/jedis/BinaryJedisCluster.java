@@ -25,12 +25,11 @@ import redis.clients.util.KeyMergeUtil;
 import redis.clients.util.SafeEncoder;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
 import redis.clients.util.JedisClusterHashTagUtil;
 
 public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterCommands,
@@ -72,8 +71,13 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
     this.maxAttempts = maxAttempts;
   }
 
+  public BinaryJedisCluster(JedisClusterConnectionHandler connectionHandler, int maxAttempts) {
+    this.connectionHandler = connectionHandler;
+    this.maxAttempts = maxAttempts;
+  }
+
   @Override
-  public void close() throws IOException {
+  public void close() {
     if (connectionHandler != null) {
       connectionHandler.close();
     }
@@ -89,6 +93,16 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
       @Override
       public String execute(Jedis connection) {
         return connection.set(key, value);
+      }
+    }.runBinary(key);
+  }
+
+  @Override
+  public String set(final byte[] key, final byte[] value, final byte[] nxxx) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.set(key, value, nxxx);
       }
     }.runBinary(key);
   }

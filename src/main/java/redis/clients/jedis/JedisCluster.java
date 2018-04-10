@@ -109,12 +109,26 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
     super(jedisClusterNode, connectionTimeout, soTimeout, maxAttempts, password, poolConfig);
   }
 
+  public JedisCluster(JedisClusterConnectionHandler connectionHandler, int maxAttempts) {
+    super(connectionHandler, maxAttempts);
+  }
+
   @Override
   public String set(final String key, final String value) {
     return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
       @Override
       public String execute(Jedis connection) {
         return connection.set(key, value);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public String set(final String key, final String value, final String expx, final long time) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.set(key, value, expx, time);
       }
     }.run(key);
   }

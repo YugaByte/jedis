@@ -52,7 +52,7 @@ public class JedisClusterTestUtil {
   }
 
   private static void assertNodeRecognizedStatus(Jedis node, String targetNodeId,
-      boolean shouldRecognized, int timeoutMs) {
+                                                 boolean shouldRecognized, int timeoutMs) {
     int sleepInterval = 100;
     for (int sleepTime = 0; sleepTime <= timeoutMs; sleepTime += sleepInterval) {
       boolean known = isKnownNode(node, targetNodeId);
