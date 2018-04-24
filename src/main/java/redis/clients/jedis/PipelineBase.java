@@ -768,6 +768,44 @@ public abstract class PipelineBase extends Queable implements BinaryRedisPipelin
     return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
   }
 
+  public Response<List<String>> tsrevrangeByTime(String key, long min, long max) {
+    getClient(key).tsrevrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<String>> tsrevrangeByTime(String key, long min, long max, int limit) {
+    getClient(key).tsrevrangeByTime(key, min, max, limit);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<byte[]>> tsrevrangeByTime(byte[] key, long min, long max) {
+    return tsrevrangeByTime(key, toByteArray(min), toByteArray(max));
+  }
+
+  public Response<List<byte[]>> tsrevrangeByTime(byte[] key, long min, long max, int limit) {
+    return tsrevrangeByTime(key, toByteArray(min), toByteArray(max), toByteArray(limit));
+  }
+
+  public Response<List<String>> tsrevrangeByTime(String key, String min, String max) {
+    getClient(key).tsrevrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<String>> tsrevrangeByTime(String key, String min, String max, int limit) {
+    getClient(key).tsrevrangeByTime(key, min, max, limit);
+    return getResponse(BuilderFactory.STRING_LIST);
+  }
+
+  public Response<List<byte[]>> tsrevrangeByTime(byte[] key, byte[] min, byte[] max) {
+    getClient(key).tsrevrangeByTime(key, min, max);
+    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
+  }
+
+  public Response<List<byte[]>> tsrevrangeByTime(byte[] key, byte[] min, byte[] max, byte[] limit) {
+    getClient(key).tsrevrangeByTime(key, min, max, limit);
+    return getResponse(BuilderFactory.BYTE_ARRAY_LIST);
+  }
+
   public Response<Long> zadd(String key, double score, String member) {
     getClient(key).zadd(key, score, member);
     return getResponse(BuilderFactory.LONG);

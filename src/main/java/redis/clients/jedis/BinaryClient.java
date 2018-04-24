@@ -476,6 +476,34 @@ public class BinaryClient extends Connection {
     sendCommand(TSRANGEBYTIME, key, min.getBytes(), max.getBytes());
   }
 
+  public void tsrevrangeByTime(final byte[] key, final long min, final long max) {
+    sendCommand(TSREVRANGEBYTIME, key, toByteArray(min), toByteArray(max));
+  }
+
+  public void tsrevrangeByTime(final byte[] key, final long min, final long max, final int limit) {
+    sendCommand(TSREVRANGEBYTIME, key, toByteArray(min), toByteArray(max), "LIMIT".getBytes(),
+        toByteArray(limit));
+  }
+
+  public void tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
+    sendCommand(TSREVRANGEBYTIME, key, min, max);
+  }
+
+  public void tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max,
+                               final byte[] limit) {
+    sendCommand(TSREVRANGEBYTIME, key, min, max, "LIMIT".getBytes(), limit);
+  }
+
+  public void tsrevrangeByTime(final byte[] key, final String min, final String max) {
+    sendCommand(TSREVRANGEBYTIME, key, min.getBytes(), max.getBytes());
+  }
+
+  public void tsrevrangeByTime(final byte[] key, final String min, final String max,
+                               final int limit) {
+    sendCommand(TSREVRANGEBYTIME, key, min.getBytes(), max.getBytes(), "LIMIT".getBytes(),
+        toByteArray(limit));
+  }
+
   public void zadd(final byte[] key, final double score, final byte[] member) {
     sendCommand(ZADD, key, toByteArray(score), member);
   }

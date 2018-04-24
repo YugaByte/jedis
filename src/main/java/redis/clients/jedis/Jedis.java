@@ -1523,7 +1523,7 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
    * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
    * Note that the list contains an even number of elements. The elements with an even index are the
    * timestamps and the elements with an odd index following them are the associated values. For
-   * example: [10, "v1", 20, "v2", 30, "v3].
+   * example: [10, "v1", 20, "v2", 30, "v3"].
    */
   public List<String> tsrangeByTime(final String key, final long min, final long max) {
     checkIsInMultiOrPipeline();
@@ -1538,6 +1538,216 @@ public class Jedis extends BinaryJedis implements JedisCommands, MultiKeyCommand
   public List<String> tsrangeByTime(final String key, final String min, final String max) {
     checkIsInMultiOrPipeline();
     client.tsrangeByTime(key, min, max);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max). The elements are sorted from newest
+   * to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(String, long, long)
+   * @see #tsrevrangeByTime(String, String, String)
+   * @param key
+   * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
+   * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<String> tsrevrangeByTime(final String key, final long min, final long max) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  /**
+   * Return all the elements (or the last n elements if LIMIT n is specified) in the map stored at
+   * key with a timestamp between min and max (including elements with a timestamp equal to min or
+   * max). The elements are sorted from newest to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Optional parameter LIMIT</b>
+   * <p>
+   * If 'LIMIT n' is specified, the command will only return the last 2n elements in the map at the
+   * specified key. For example, if the elements stored in the map at key 'k' are
+   * [1, "v1", 2, "v2", 3, "v3", 4, "v4"], then
+   * <p>
+   * {@code TSREVRANGE k 2 4 LIMIT 2}
+   * <p>
+   * Will return the list [4, "v4", 3, "v3"]
+   * </p>
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(String, long, long, int)
+   * @see #tsrevrangeByTime(String, String, String, int)
+   * @param key
+   * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
+   * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
+   * @param limit
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<String> tsrevrangeByTime(final String key, final long min, final long max,
+                                       final int limit) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max, limit);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max). The elements are sorted from newest
+   * to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(String, long, long)
+   * @see #tsrevrangeByTime(String, String, String)
+   * @param key
+   * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
+   * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<String> tsrevrangeByTime(final String key, final String min, final String max) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max);
+    final List<String> members = client.getMultiBulkReply();
+    if (members == null) {
+      return Collections.emptyList();
+    }
+    return members;
+  }
+
+  /**
+   * Return all the elements (or the last n elements if LIMIT n is specified) in the map stored at
+   * key with a timestamp between min and max (including elements with a timestamp equal to min or
+   * max). The elements are sorted from newest to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Optional parameter LIMIT</b>
+   * <p>
+   * If 'LIMIT n' is specified, the command will only return the last 2n elements in the map at the
+   * specified key. For example, if the elements stored in the map at key 'k' are
+   * [1, "v1", 2, "v2", 3, "v3", 4, "v4"], then
+   * <p>
+   * {@code TSREVRANGE k 2 4 LIMIT 2}
+   * <p>
+   * Will return the list [4, "v4", 3, "v3"]
+   * </p>
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(String, long, long, int)
+   * @see #tsrevrangeByTime(String, String, String, int)
+   * @param key
+   * @param min a long, "-inf", or a string representing a long that could be prefixed by "(".
+   * @param max a long, "+inf", or a string representing a long that could be prefixed by "(".
+   * @param limit
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<String> tsrevrangeByTime(final String key, final String min, final String max,
+                                       final int limit) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max, limit);
     final List<String> members = client.getMultiBulkReply();
     if (members == null) {
       return Collections.emptyList();

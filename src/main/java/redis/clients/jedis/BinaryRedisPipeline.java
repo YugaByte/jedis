@@ -170,6 +170,14 @@ public interface BinaryRedisPipeline {
 
   Response<List<byte[]>> tsrangeByTime(byte[] key, byte[] min, byte[] max);
 
+  Response<List<byte[]>> tsrevrangeByTime(byte[] key, long min, long max);
+
+  Response<List<byte[]>> tsrevrangeByTime(byte[] key, long min, long max, int limit);
+
+  Response<List<byte[]>> tsrevrangeByTime(byte[] key, byte[] min, byte[] max);
+
+  Response<List<byte[]>> tsrevrangeByTime(byte[] key, byte[] min, byte[] max, byte[] limit);
+
   Response<Long> zadd(byte[] key, double score, byte[] member);
 
   Response<Long> zadd(byte[] key, double score, byte[] member, ZAddParams params);

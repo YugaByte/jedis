@@ -417,6 +417,27 @@ public class Client extends BinaryClient implements Commands {
     tsrangeByTime(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
   }
 
+  public void tsrevrangeByTime(final String key, final long min, final long max) {
+    tsrevrangeByTime(SafeEncoder.encode(key), toByteArray(min), toByteArray(max));
+  }
+
+  public void tsrevrangeByTime(final String key, final long min, final long max, final int limit) {
+    tsrevrangeByTime(SafeEncoder.encode(key), toByteArray(min), toByteArray(max),
+        toByteArray(limit));
+  }
+
+  @Override
+  public void tsrevrangeByTime(final String key, final String min, final String max) {
+    tsrevrangeByTime(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+  }
+
+  @Override
+  public void tsrevrangeByTime(final String key, final String min, final String max,
+                               final int limit) {
+    tsrevrangeByTime(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max),
+        toByteArray(limit));
+  }
+
   public void zadd(final String key, final double score, final String member) {
     zadd(SafeEncoder.encode(key), score, SafeEncoder.encode(member));
   }

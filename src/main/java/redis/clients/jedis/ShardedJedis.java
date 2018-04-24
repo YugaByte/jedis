@@ -458,6 +458,26 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     return j.tsrangeByTime(key, min, max);
   }
 
+  public List<String> tsrevrangeByTime(String key, long min, long max) {
+    Jedis j = getShard(key);
+    return j.tsrevrangeByTime(key, min, max);
+  }
+
+  public List<String> tsrevrangeByTime(String key, long min, long max, int limit) {
+    Jedis j = getShard(key);
+    return j.tsrevrangeByTime(key, min, max, limit);
+  }
+
+  public List<String> tsrevrangeByTime(String key, String min, String max) {
+    Jedis j = getShard(key);
+    return j.tsrevrangeByTime(key, min, max);
+  }
+
+  public List<String> tsrevrangeByTime(String key, String min, String max, int limit) {
+    Jedis j = getShard(key);
+    return j.tsrevrangeByTime(key, min, max, limit);
+  }
+
   public Long zadd(String key, double score, String member) {
     Jedis j = getShard(key);
     return j.zadd(key, score, member);

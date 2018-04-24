@@ -810,6 +810,46 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
     }.run(key);
   }
 
+  public List<String> tsrevrangeByTime(final String key, final long min, final long max) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max);
+      }
+    }.run(key);
+  }
+
+  public List<String> tsrevrangeByTime(final String key, final long min, final long max,
+                                       final int limit) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max, limit);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public List<String> tsrevrangeByTime(final String key, final String min, final String max) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max);
+      }
+    }.run(key);
+  }
+
+  @Override
+  public List<String> tsrevrangeByTime(final String key, final String min, final String max,
+                                       final int limit) {
+    return new JedisClusterCommand<List<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<String> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max, limit);
+      }
+    }.run(key);
+  }
+
   @Override
   public Long zadd(final String key, final double score, final String member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {

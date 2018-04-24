@@ -752,6 +752,46 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
     }.runBinary(key);
   }
 
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final long min, final long max) {
+    return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<byte[]> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max);
+      }
+    }.runBinary(key);
+  }
+
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final long min, final long max,
+                                       final int limit) {
+    return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<byte[]> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max, limit);
+      }
+    }.runBinary(key);
+  }
+
+  @Override
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
+    return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<byte[]> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max);
+      }
+    }.runBinary(key);
+  }
+
+  @Override
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max,
+                                       final byte[] limit) {
+    return new JedisClusterCommand<List<byte[]>>(connectionHandler, maxAttempts) {
+      @Override
+      public List<byte[]> execute(Jedis connection) {
+        return connection.tsrevrangeByTime(key, min, max, limit);
+      }
+    }.runBinary(key);
+  }
+
   @Override
   public Long zadd(final byte[] key, final double score, final byte[] member) {
     return new JedisClusterCommand<Long>(connectionHandler, maxAttempts) {

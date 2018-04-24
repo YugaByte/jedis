@@ -168,6 +168,14 @@ public interface RedisPipeline {
   Response<List<String>> tsrangeByTime(String key, long min, long max);
 
   Response<List<String>> tsrangeByTime(String key, String min, String max);
+  
+  Response<List<String>> tsrevrangeByTime(String key, long min, long max);
+
+  Response<List<String>> tsrevrangeByTime(String key, long min, long max, int limit);
+
+  Response<List<String>> tsrevrangeByTime(String key, String min, String max);
+
+  Response<List<String>> tsrevrangeByTime(String key, String min, String max, int limit);
 
   Response<Long> zadd(String key, double score, String member);
 

@@ -167,6 +167,14 @@ public interface JedisCommands {
   List<String> tsrangeByTime(String key, long min, long max);
 
   List<String> tsrangeByTime(String key, String min, String max);
+  
+  List<String> tsrevrangeByTime(String key, long min, long max);
+
+  List<String> tsrevrangeByTime(String key, long min, long max, int limit);
+
+  List<String> tsrevrangeByTime(String key, String min, String max);
+
+  List<String> tsrevrangeByTime(String key, String min, String max, int limit);
 
   Long zadd(String key, double score, String member);
 

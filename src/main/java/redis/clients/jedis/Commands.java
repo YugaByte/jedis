@@ -186,6 +186,15 @@ public interface Commands {
 
   public void tsrangeByTime(final String key, final String min, final String max);
 
+  public void tsrevrangeByTime(final String key, final long min, final long max);
+
+  public void tsrevrangeByTime(final String key, final long min, final long max, final int limit);
+
+  public void tsrevrangeByTime(final String key, final String min, final String max);
+
+  public void tsrevrangeByTime(final String key, final String min, final String max,
+                               final int limit);
+
   public void zadd(final String key, final double score, final String member,
       final ZAddParams params);
 

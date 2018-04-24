@@ -169,6 +169,14 @@ public interface BinaryJedisCommands {
 
   List<byte[]> tsrangeByTime(byte[] key, byte[] min, byte[] max);
 
+  List<byte[]> tsrevrangeByTime(byte[] key, long min, long max);
+
+  List<byte[]> tsrevrangeByTime(byte[] key, long min, long max, int limit);
+
+  List<byte[]> tsrevrangeByTime(byte[] key, byte[] min, byte[] max);
+
+  List<byte[]> tsrevrangeByTime(byte[] key, byte[] min, byte[] max, byte[] limit);
+
   Long zadd(byte[] key, double score, byte[] member);
 
   Long zadd(byte[] key, double score, byte[] member, ZAddParams params);

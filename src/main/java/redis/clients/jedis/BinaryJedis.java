@@ -1675,7 +1675,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
    * Note that the list contains an even number of elements. The elements with an even index are the
    * timestamps and the elements with an odd index following them are the associated values. For
-   * example: [10, "v1", 20, "v2", 30, "v3].
+   * example: [10, "v1", 20, "v2", 30, "v3"].
    */
   public List<byte[]> tsrangeByTime(final byte[] key, final long min, final long max) {
     return tsrangeByTime(key, toByteArray(min), toByteArray(max));
@@ -1684,6 +1684,196 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
   public List<byte[]> tsrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
     checkIsInMultiOrPipeline();
     client.tsrangeByTime(key, min, max);
+    return client.getBinaryMultiBulkReply();
+  }
+
+  /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max). The elements are sorted from newest
+   * to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(byte[], long, long)
+   * @see #tsrevrangeByTime(byte[], byte[], byte[])
+   * @param key
+   * @param min
+   * @param max
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final long min, final long max) {
+    return tsrevrangeByTime(key, toByteArray(min), toByteArray(max));
+  }
+
+  /**
+   * Return all the elements (or the last n elements if LIMIT n is specified) in the map stored at
+   * key with a timestamp between min and max (including elements with a timestamp equal to min or
+   * max). The elements are sorted from newest to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Optional parameter LIMIT</b>
+   * <p>
+   * If 'LIMIT n' is specified, the command will only return the last 2n elements in the map at the
+   * specified key. For example, if the elements stored in the map at key 'k' are
+   * [1, "v1", 2, "v2", 3, "v3", 4, "v4"], then
+   * <p>
+   * {@code TSREVRANGE k 2 4 LIMIT 2}
+   * <p>
+   * Will return the list [4, "v4", 3, "v3"]
+   * </p>
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(byte[], long, long, int)
+   * @see #tsrevrangeByTime(byte[], byte[], byte[], byte[])
+   * @param key
+   * @param min
+   * @param max
+   * @param limit
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final long min, final long max,
+                                       final int limit) {
+    return tsrevrangeByTime(key, toByteArray(min), toByteArray(max), toByteArray(limit));
+  }
+
+  /**
+   * Return all the elements in the map stored at key with a timestamp between min and max
+   * (including elements with a timestamp equal to min or max). The elements are sorted from newest
+   * to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(byte[], long, long)
+   * @see #tsrevrangeByTime(byte[], byte[], byte[])
+   * @param key
+   * @param min
+   * @param max
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max);
+    return client.getBinaryMultiBulkReply();
+  }
+
+  /**
+   * Return all the elements (or the last n elements if LIMIT n is specified) in the map stored at
+   * key with a timestamp between min and max (including elements with a timestamp equal to min or
+   * max). The elements are sorted from newest to oldest (the reverse order from tsrangeByTime)
+   * <p>
+   * <b>Exclusive intervals and infinity</b>
+   * <p>
+   * min and max can be -inf and +inf, so that you are not required to know what's the greatest or
+   * smallest element in order to take, for instance, elements "up to a given timestamp".
+   * <p>
+   * Also while the interval is for default closed (inclusive) it's possible to specify open
+   * intervals prefixing the timestamp with a "(" character, so for instance:
+   * <p>
+   * {@code TSREVRANGE k (1 3}
+   * <p>
+   * Will return all the values with timestamp &gt; 1 and &lt;= 3, while for
+   * instance:
+   * <p>
+   * {@code TSREVRANGE k (5 (10}
+   * <p>
+   * Will return all the values with timestamp &gt; 5 and &lt; 10 (5 and 10 excluded).
+   * <p>
+   * <b>Optional parameter LIMIT</b>
+   * <p>
+   * If 'LIMIT n' is specified, the command will only return the last 2n elements in the map at the
+   * specified key. For example, if the elements stored in the map at key 'k' are
+   * [1, "v1", 2, "v2", 3, "v3", 4, "v4"], then
+   * <p>
+   * {@code TSREVRANGE k 2 4 LIMIT 2}
+   * <p>
+   * Will return the list [4, "v4", 3, "v3"]
+   * </p>
+   * <p>
+   * <b>Time complexity:</b>
+   * <p>
+   * O(M) with M being the number of elements returned by the command.
+   * @see #tsrevrangeByTime(byte[], long, long, int)
+   * @see #tsrevrangeByTime(byte[], byte[], byte[], byte[])
+   * @param key
+   * @param min
+   * @param max
+   * @param limit
+   * @parm
+   * @return Multi bulk reply specifically a list of elements in the specified timestamp range.
+   * Note that the list contains an even number of elements. The elements with an even index are the
+   * timestamps and the elements with an odd index following them are the associated values. For
+   * example: [30, "v3", 20, "v2", 10, "v1"].
+   */
+  public List<byte[]> tsrevrangeByTime(final byte[] key, final byte[] min, final byte[] max,
+                                 final byte[] limit) {
+    checkIsInMultiOrPipeline();
+    client.tsrevrangeByTime(key, min, max, limit);
     return client.getBinaryMultiBulkReply();
   }
 
