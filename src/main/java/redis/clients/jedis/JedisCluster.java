@@ -134,6 +134,16 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
   }
 
   @Override
+  public String set(final String key, final String value, final String nxxx) {
+    return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
+      @Override
+      public String execute(Jedis connection) {
+        return connection.set(key, value, nxxx);
+      }
+    }.run(key);
+  }
+
+  @Override
   public String set(final String key, final String value, final String nxxx, final String expx,
       final long time) {
     return new JedisClusterCommand<String>(connectionHandler, maxAttempts) {
@@ -1946,17 +1956,6 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
   /*
    * below methods will be removed at 3.0
    */
-
-  /**
-   * @deprecated SetParams is scheduled to be introduced at next major release Please use setnx
-   *             instead for now
-   * @see <a href="https://github.com/xetorthio/jedis/pull/878">issue#878</a>
-   */
-  @Deprecated
-  @Override
-  public String set(String key, String value, String nxxx) {
-    return setnx(key, value) == 1 ? "OK" : null;
-  }
 
   /**
    * @deprecated unusable command, this will be removed at next major release.
