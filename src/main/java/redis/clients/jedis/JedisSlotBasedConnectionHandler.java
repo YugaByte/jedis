@@ -25,6 +25,7 @@ import redis.clients.jedis.exceptions.JedisClusterException;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.exceptions.JedisNoReachableClusterNodeException;
+import redis.clients.jedis.Protocol;
 import redis.clients.util.JedisClusterCRC16;
 
 /**
@@ -43,8 +44,12 @@ public class JedisSlotBasedConnectionHandler extends JedisClusterConnectionHandl
   }
 
   public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password) {
-    super(nodes, poolConfig, connectionTimeout, soTimeout, password);
-    initializeSlotsCache(nodes, poolConfig, password);
+    this(nodes, poolConfig, connectionTimeout, soTimeout, password, Protocol.DEFAULT_DATABASE);
+  }
+
+  public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password, int database) {
+    super(nodes, poolConfig, connectionTimeout, soTimeout, password, database);
+    initializeSlotsCache(nodes, poolConfig, password, database);
   }
 
   @Override
@@ -124,11 +129,14 @@ public class JedisSlotBasedConnectionHandler extends JedisClusterConnectionHandl
     throw new JedisNoReachableClusterNodeException("No reachable node in cluster");
   }
 
-  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig, String password) {
+  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig, String password, int database) {
     for (HostAndPort hostAndPort : startNodes) {
       Jedis jedis = new Jedis(hostAndPort.getHost(), hostAndPort.getPort());
       if (password != null) {
         jedis.auth(password);
+      }
+      if (database != Protocol.DEFAULT_DATABASE) {
+        jedis.select(database);
       }
       try {
         List<Object> slots = jedis.clusterSlots();

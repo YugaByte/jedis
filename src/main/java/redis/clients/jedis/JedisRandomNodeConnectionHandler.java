@@ -14,6 +14,7 @@
 package redis.clients.jedis;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import redis.clients.jedis.Protocol;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -42,8 +43,22 @@ public class JedisRandomNodeConnectionHandler extends JedisClusterConnectionHand
 
   public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
                                           int connectionTimeout, int soTimeout,
+                                          String password, int database) {
+    this(nodes, poolConfig, connectionTimeout, soTimeout, password, database, /* includeOnlyLiveNodes */ true,
+        DEFAULT_NODES_REFRESH_INTERVAL_MILLIS);
+  }
+  public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
+                                          int connectionTimeout, int soTimeout,
                                           boolean includeOnlyLiveNodes, final long refreshIntervalMillis) {
-    super(nodes, poolConfig, connectionTimeout, soTimeout, null);
+    this(nodes, poolConfig, connectionTimeout, soTimeout, /* password */ null, Protocol.DEFAULT_DATABASE,
+         /* includeOnlyLiveNodes */ true, DEFAULT_NODES_REFRESH_INTERVAL_MILLIS);
+  }
+
+  public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
+                                          int connectionTimeout, int soTimeout,
+                                          String password, int database,
+                                          boolean includeOnlyLiveNodes, final long refreshIntervalMillis) {
+    super(nodes, poolConfig, connectionTimeout, soTimeout, password, database);
     this.includeOnlyLiveNodes = includeOnlyLiveNodes;
     refreshNodesCache();
 

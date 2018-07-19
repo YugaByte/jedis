@@ -18,6 +18,7 @@ package redis.clients.jedis;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.util.Slowlog;
+import redis.clients.jedis.Protocol;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,17 +45,39 @@ public class YBJedis extends JedisCluster implements AdvancedJedisCommands, Adva
   }
 
   public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout) {
+    this(host, port, connectionTimeout, soTimeout, Protocol.DEFAULT_DATABASE);
+  }
+
+  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final int database) {
+    this(host, port, connectionTimeout, soTimeout, null, database);
+  }
+
+  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final String password, final int database) {
     this(new HashSet<HostAndPort>(Collections.singletonList(new HostAndPort(host, port))),
-        connectionTimeout, soTimeout, DEFAULT_MAX_REDIRECTIONS, new JedisPoolConfig());
+        connectionTimeout, soTimeout, DEFAULT_MAX_REDIRECTIONS, password, database, new JedisPoolConfig());
   }
 
   public YBJedis(final Set<HostAndPort> hosts, final int timeout) {
     this(hosts, timeout, timeout, DEFAULT_MAX_REDIRECTIONS, new JedisPoolConfig());
   }
 
+  public YBJedis(final Set<HostAndPort> hosts, final int timeout, final int database) {
+    this(hosts, timeout, timeout, DEFAULT_MAX_REDIRECTIONS, null, database, new JedisPoolConfig());
+  }
+
   public YBJedis(Set<HostAndPort> contactPoints, int connectionTimeout, int soTimeout,
                  int maxAttempts, GenericObjectPoolConfig poolConfig) {
-    this(new JedisRandomNodeConnectionHandler(contactPoints, poolConfig, connectionTimeout, soTimeout), maxAttempts);
+    this(contactPoints, connectionTimeout, soTimeout, maxAttempts, null, Protocol.DEFAULT_DATABASE, poolConfig);
+  }
+
+  public YBJedis(Set<HostAndPort> contactPoints, int connectionTimeout, int soTimeout,
+                 int maxAttempts, String password, GenericObjectPoolConfig poolConfig) {
+    this(contactPoints, connectionTimeout, soTimeout, maxAttempts, password, Protocol.DEFAULT_DATABASE, poolConfig);
+  }
+
+  public YBJedis(Set<HostAndPort> contactPoints, int connectionTimeout, int soTimeout,
+                 int maxAttempts, String password, int database, GenericObjectPoolConfig poolConfig) {
+    this(new JedisRandomNodeConnectionHandler(contactPoints, poolConfig, connectionTimeout, soTimeout, password, database), maxAttempts);
   }
 
   public YBJedis(JedisClusterConnectionHandler connectionHandler, int maxAttempts) {
