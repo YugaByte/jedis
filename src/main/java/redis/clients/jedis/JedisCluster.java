@@ -22,6 +22,7 @@ import redis.clients.jedis.params.sortedset.ZIncrByParams;
 import redis.clients.util.KeyMergeUtil;
 import redis.clients.jedis.params.geo.GeoRadiusParam;
 
+import java.lang.Integer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -76,9 +77,14 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
 
   public JedisCluster(HostAndPort node, int connectionTimeout, int soTimeout,
                       int maxAttempts, String password, int database, final GenericObjectPoolConfig poolConfig) {
+    this(node, connectionTimeout, soTimeout, maxAttempts, password, Integer.toString(database), poolConfig);
+  }
+
+  public JedisCluster(HostAndPort node, int connectionTimeout, int soTimeout,
+                      int maxAttempts, String password, String database, final GenericObjectPoolConfig poolConfig) {
     super(Collections.singleton(node), connectionTimeout, soTimeout, maxAttempts, password, database, poolConfig);
   }
-  
+
   public JedisCluster(Set<HostAndPort> nodes) {
     this(nodes, DEFAULT_TIMEOUT);
   }
@@ -116,6 +122,10 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
 
   public JedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout,
                       int maxAttempts, String password, int database, final GenericObjectPoolConfig poolConfig) {
+    this(jedisClusterNode, connectionTimeout, soTimeout, maxAttempts, password, Integer.toString(database), poolConfig);
+  }
+  public JedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout,
+                      int maxAttempts, String password, String database, final GenericObjectPoolConfig poolConfig) {
     super(jedisClusterNode, connectionTimeout, soTimeout, maxAttempts, password, database, poolConfig);
   }
 

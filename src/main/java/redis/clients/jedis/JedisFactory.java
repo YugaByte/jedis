@@ -1,5 +1,6 @@
 package redis.clients.jedis;
 
+import java.lang.Integer;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,7 +24,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
   private final int connectionTimeout;
   private final int soTimeout;
   private final String password;
-  private final int database;
+  private final String database;
   private final String clientName;
   private final boolean ssl;
   private final SSLSocketFactory sslSocketFactory;
@@ -32,6 +33,14 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
 
   public JedisFactory(final String host, final int port, final int connectionTimeout,
       final int soTimeout, final String password, final int database, final String clientName,
+      final boolean ssl, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+      final HostnameVerifier hostnameVerifier) {
+    this(host, port, connectionTimeout, soTimeout, password, Integer.toString(database), clientName,
+         ssl, sslSocketFactory, sslParameters, hostnameVerifier);
+  }
+
+  public JedisFactory(final String host, final int port, final int connectionTimeout,
+      final int soTimeout, final String password, final String database, final String clientName,
       final boolean ssl, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
       final HostnameVerifier hostnameVerifier) {
     this.hostAndPort.set(new HostAndPort(host, port));
@@ -73,7 +82,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
   @Override
   public void activateObject(PooledObject<Jedis> pooledJedis) throws Exception {
     final BinaryJedis jedis = pooledJedis.getObject();
-    if (jedis.getDB() != database) {
+    if (!database.equals(jedis.getDB())) {
       jedis.select(database);
     }
 
@@ -107,7 +116,7 @@ class JedisFactory implements PooledObjectFactory<Jedis> {
       if (null != this.password) {
         jedis.auth(this.password);
       }
-      if (database != 0) {
+      if (!database.equals(Protocol.DEFAULT_DATABASE)) {
         jedis.select(database);
       }
       if (clientName != null) {

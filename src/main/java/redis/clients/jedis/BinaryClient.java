@@ -22,6 +22,8 @@ import redis.clients.jedis.params.sortedset.ZAddParams;
 import redis.clients.jedis.params.sortedset.ZIncrByParams;
 import redis.clients.util.SafeEncoder;
 
+import java.lang.Integer;
+import java.lang.Long;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,8 @@ public class BinaryClient extends Connection {
 
   private String password;
 
-  private long db;
+  static private final String DEFAULT_DB = "0";
+  private String db = DEFAULT_DB;
 
   private boolean isInWatch;
 
@@ -100,6 +103,10 @@ public class BinaryClient extends Connection {
   }
 
   public void setDb(long db) {
+    this.db = Long.toString(db);
+  }
+
+  public void setDb(String db) {
     this.db = db;
   }
 
@@ -111,8 +118,8 @@ public class BinaryClient extends Connection {
         auth(password);
         getStatusCodeReply();
       }
-      if (db > 0) {
-        select(Long.valueOf(db).intValue());
+      if (!db.equals(DEFAULT_DB)) {
+        select(db);
         getStatusCodeReply();
       }
     }
@@ -140,7 +147,7 @@ public class BinaryClient extends Connection {
   }
 
   public void quit() {
-    db = 0;
+    db = DEFAULT_DB;
     sendCommand(QUIT);
   }
 
@@ -196,8 +203,15 @@ public class BinaryClient extends Connection {
     sendCommand(SELECT, toByteArray(index));
   }
 
+  public void select(final String db) {
+    sendCommand(SELECT, SafeEncoder.encode(db));
+  }
+
   public void move(final byte[] key, final int dbIndex) {
-    sendCommand(MOVE, key, toByteArray(dbIndex));
+    move(key, Integer.toString(dbIndex));
+  }
+  public void move(final byte[] key, final String dbIndex) {
+    sendCommand(MOVE, key, SafeEncoder.encode(dbIndex));
   }
 
   public void flushAll() {
@@ -1033,18 +1047,18 @@ public class BinaryClient extends Connection {
     sendCommand(GETRANGE, key, toByteArray(startOffset), toByteArray(endOffset));
   }
 
-  public Long getDB() {
+  public String getDB() {
     return db;
   }
 
   public void disconnect() {
-    db = 0;
+    db = DEFAULT_DB;
     super.disconnect();
   }
 
   @Override
   public void close() {
-    db = 0;
+    db = DEFAULT_DB;
     super.close();
   }
 

@@ -16,6 +16,7 @@ package redis.clients.jedis;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Protocol;
 
+import java.lang.Integer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashSet;
@@ -44,6 +45,12 @@ public class JedisRandomNodeConnectionHandler extends JedisClusterConnectionHand
   public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
                                           int connectionTimeout, int soTimeout,
                                           String password, int database) {
+    this(nodes, poolConfig, connectionTimeout, soTimeout, password, Integer.toString(database), /* includeOnlyLiveNodes */ true,
+        DEFAULT_NODES_REFRESH_INTERVAL_MILLIS);
+  }
+  public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
+                                          int connectionTimeout, int soTimeout,
+                                          String password, String database) {
     this(nodes, poolConfig, connectionTimeout, soTimeout, password, database, /* includeOnlyLiveNodes */ true,
         DEFAULT_NODES_REFRESH_INTERVAL_MILLIS);
   }
@@ -57,6 +64,14 @@ public class JedisRandomNodeConnectionHandler extends JedisClusterConnectionHand
   public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
                                           int connectionTimeout, int soTimeout,
                                           String password, int database,
+                                          boolean includeOnlyLiveNodes, final long refreshIntervalMillis) {
+    this(nodes, poolConfig, connectionTimeout, soTimeout, password, Integer.toString(database),
+         includeOnlyLiveNodes, refreshIntervalMillis);
+  }
+
+  public JedisRandomNodeConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig,
+                                          int connectionTimeout, int soTimeout,
+                                          String password, String database,
                                           boolean includeOnlyLiveNodes, final long refreshIntervalMillis) {
     super(nodes, poolConfig, connectionTimeout, soTimeout, password, database);
     this.includeOnlyLiveNodes = includeOnlyLiveNodes;

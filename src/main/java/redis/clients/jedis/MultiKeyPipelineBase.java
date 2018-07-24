@@ -1,5 +1,6 @@
 package redis.clients.jedis;
 
+import java.lang.Integer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -396,6 +397,10 @@ public abstract class MultiKeyPipelineBase extends PipelineBase implements Basic
   }
 
   public Response<String> select(int index) {
+    return select(Integer.toString(index));
+  }
+
+  public Response<String> select(String index) {
     client.select(index);
     Response<String> response = getResponse(BuilderFactory.STRING);
     client.setDb(index);

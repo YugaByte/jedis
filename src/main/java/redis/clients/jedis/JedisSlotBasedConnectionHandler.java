@@ -16,6 +16,7 @@
 
 package redis.clients.jedis;
 
+import java.lang.Integer;
 import java.util.List;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -48,6 +49,10 @@ public class JedisSlotBasedConnectionHandler extends JedisClusterConnectionHandl
   }
 
   public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password, int database) {
+    this(nodes, poolConfig, connectionTimeout, soTimeout, password, Integer.toString(database));
+  }
+
+  public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes, GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password, String database) {
     super(nodes, poolConfig, connectionTimeout, soTimeout, password, database);
     initializeSlotsCache(nodes, poolConfig, password, database);
   }
@@ -129,13 +134,13 @@ public class JedisSlotBasedConnectionHandler extends JedisClusterConnectionHandl
     throw new JedisNoReachableClusterNodeException("No reachable node in cluster");
   }
 
-  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig, String password, int database) {
+  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig, String password, String database) {
     for (HostAndPort hostAndPort : startNodes) {
       Jedis jedis = new Jedis(hostAndPort.getHost(), hostAndPort.getPort());
       if (password != null) {
         jedis.auth(password);
       }
-      if (database != Protocol.DEFAULT_DATABASE) {
+      if (!database.equals(Protocol.DEFAULT_DATABASE)) {
         jedis.select(database);
       }
       try {

@@ -12,6 +12,8 @@ public interface BasicCommands {
 
   String select(int index);
 
+  String select(String db);
+
   String flushAll();
 
   String auth(String password);
@@ -34,7 +36,7 @@ public interface BasicCommands {
 
   String slaveofNoOne();
 
-  Long getDB();
+  String getDB();
 
   String debug(DebugParams params);
 

@@ -48,11 +48,11 @@ public class YBJedis extends JedisCluster implements AdvancedJedisCommands, Adva
     this(host, port, connectionTimeout, soTimeout, Protocol.DEFAULT_DATABASE);
   }
 
-  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final int database) {
+  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final String database) {
     this(host, port, connectionTimeout, soTimeout, null, database);
   }
 
-  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final String password, final int database) {
+  public YBJedis(final String host, final int port, final int connectionTimeout, final int soTimeout, final String password, final String database) {
     this(new HashSet<HostAndPort>(Collections.singletonList(new HostAndPort(host, port))),
         connectionTimeout, soTimeout, DEFAULT_MAX_REDIRECTIONS, password, database, new JedisPoolConfig());
   }
@@ -61,7 +61,7 @@ public class YBJedis extends JedisCluster implements AdvancedJedisCommands, Adva
     this(hosts, timeout, timeout, DEFAULT_MAX_REDIRECTIONS, new JedisPoolConfig());
   }
 
-  public YBJedis(final Set<HostAndPort> hosts, final int timeout, final int database) {
+  public YBJedis(final Set<HostAndPort> hosts, final int timeout, final String database) {
     this(hosts, timeout, timeout, DEFAULT_MAX_REDIRECTIONS, null, database, new JedisPoolConfig());
   }
 
@@ -76,7 +76,7 @@ public class YBJedis extends JedisCluster implements AdvancedJedisCommands, Adva
   }
 
   public YBJedis(Set<HostAndPort> contactPoints, int connectionTimeout, int soTimeout,
-                 int maxAttempts, String password, int database, GenericObjectPoolConfig poolConfig) {
+                 int maxAttempts, String password, String database, GenericObjectPoolConfig poolConfig) {
     this(new JedisRandomNodeConnectionHandler(contactPoints, poolConfig, connectionTimeout, soTimeout, password, database), maxAttempts);
   }
 

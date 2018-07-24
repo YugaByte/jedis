@@ -25,6 +25,7 @@ import redis.clients.util.KeyMergeUtil;
 import redis.clients.util.SafeEncoder;
 
 import java.io.Closeable;
+import java.lang.Integer;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,9 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
   }
 
   public BinaryJedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout, int maxAttempts, String password, int database, GenericObjectPoolConfig poolConfig) {
+    this(jedisClusterNode, connectionTimeout, soTimeout, maxAttempts, password, Integer.toString(database), poolConfig);
+  }
+  public BinaryJedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout, int maxAttempts, String password, String database, GenericObjectPoolConfig poolConfig) {
     this.connectionHandler = new JedisSlotBasedConnectionHandler(jedisClusterNode, poolConfig,
             connectionTimeout, soTimeout, password, database);
     this.maxAttempts = maxAttempts;
@@ -1845,6 +1849,12 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
   @Deprecated
   @Override
   public String select(int index) {
+    return select(Integer.toString(index));
+  }
+
+  @Deprecated
+  @Override
+  public String select(String db) {
     throw new JedisClusterException("No way to dispatch this command to Redis Cluster.");
   }
 
@@ -1964,7 +1974,7 @@ public class BinaryJedisCluster implements BasicCommands, BinaryJedisClusterComm
    */
   @Deprecated
   @Override
-  public Long getDB() {
+  public String getDB() {
     throw new JedisClusterException("No way to dispatch this command to Redis Cluster.");
   }
 

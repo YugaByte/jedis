@@ -33,6 +33,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import java.io.Closeable;
 import java.io.Serializable;
+import java.lang.Integer;
 import java.net.URI;
 import java.util.*;
 
@@ -173,8 +174,8 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
       client.getStatusCodeReply();
     }
 
-    int dbIndex = JedisURIHelper.getDBIndex(uri);
-    if (dbIndex > 0) {
+    String dbIndex = JedisURIHelper.getDBIndex(uri);
+    if (!dbIndex.equals(Protocol.DEFAULT_DATABASE)) {
       client.select(dbIndex);
       client.getStatusCodeReply();
       client.setDb(dbIndex);
@@ -197,8 +198,8 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
       client.getStatusCodeReply();
     }
 
-    int dbIndex = JedisURIHelper.getDBIndex(uri);
-    if (dbIndex > 0) {
+    String dbIndex = JedisURIHelper.getDBIndex(uri);
+    if (!dbIndex.equals(Protocol.DEFAULT_DATABASE)) {
       client.select(dbIndex);
       client.getStatusCodeReply();
       client.setDb(dbIndex);
@@ -534,10 +535,13 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    * @return Status code reply
    */
   public String select(final int index) {
+      return select(Integer.toString(index));
+  }
+  public String select(final String db) {
     checkIsInMultiOrPipeline();
-    client.select(index);
+    client.select(db);
     String statusCodeReply = client.getStatusCodeReply();
-    client.setDb(index);
+    client.setDb(db);
 
     return statusCodeReply;
   }
@@ -553,6 +557,9 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
    *         already present on the target DB or was not found in the current DB.
    */
   public Long move(final byte[] key, final int dbIndex) {
+    return move(key, Integer.toString(dbIndex));
+  }
+  public Long move(final byte[] key, final String dbIndex) {
     checkIsInMultiOrPipeline();
     client.move(key, dbIndex);
     return client.getIntegerReply();
@@ -3437,7 +3444,7 @@ public class BinaryJedis implements BasicCommands, BinaryJedisCommands, MultiKey
     }
   }
 
-  public Long getDB() {
+  public String getDB() {
     return client.getDB();
   }
 

@@ -115,14 +115,14 @@ public class JedisTest extends JedisCommandTestBase {
 
   @Test
   public void shouldNotUpdateDbIndexIfSelectFails() throws URISyntaxException {
-    long currentDb = jedis.getDB();
+    String currentDb = jedis.getDB();
     try {
       int invalidDb = -1;
       jedis.select(invalidDb);
 
       fail("Should throw an exception if tried to select invalid db");
     } catch (JedisException e) {
-      assertEquals(currentDb, jedis.getDB().intValue());
+      assertEquals(currentDb, jedis.getDB());
     }
   }
 

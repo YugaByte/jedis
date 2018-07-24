@@ -34,7 +34,7 @@ public abstract class JedisClusterConnectionHandler implements Closeable {
   protected final JedisClusterInfoCache cache;
 
   public JedisClusterConnectionHandler(Set<HostAndPort> nodes,
-                                       final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password, int database) {
+                                       final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout, String password, String database) {
     this.contactPoints = nodes;
     this.password = password;
     this.cache = new JedisClusterInfoCache(poolConfig, connectionTimeout, soTimeout, password, database);

@@ -7,6 +7,7 @@ import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
 import redis.clients.jedis.exceptions.InvalidURIException;
+import redis.clients.jedis.Protocol;
 import redis.clients.util.JedisURIHelper;
 import redis.clients.util.ShardInfo;
 import redis.clients.util.Sharded;
@@ -20,7 +21,7 @@ public class JedisShardInfo extends ShardInfo<Jedis> {
   private String password = null;
   private String name = null;
   // Default Redis DB
-  private int db = 0;
+  private String db = Protocol.DEFAULT_DATABASE;
   private boolean ssl;
   private SSLSocketFactory sslSocketFactory;
   private SSLParameters sslParameters;
@@ -268,7 +269,7 @@ public class JedisShardInfo extends ShardInfo<Jedis> {
     return name;
   }
 
-  public int getDb() {
+  public String getDb() {
     return db;
   }
 

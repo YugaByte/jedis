@@ -1,5 +1,6 @@
 package redis.clients.jedis;
 
+import java.lang.Integer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,7 @@ public class JedisSentinelPool extends Pool<Jedis> {
 
   protected String password;
 
-  protected int database = Protocol.DEFAULT_DATABASE;
+  protected String database = Protocol.DEFAULT_DATABASE;
 
   protected String clientName;
 
@@ -72,6 +73,12 @@ public class JedisSentinelPool extends Pool<Jedis> {
 
   public JedisSentinelPool(String masterName, Set<String> sentinels,
       final GenericObjectPoolConfig poolConfig, int timeout, final String password,
+      final String database) {
+    this(masterName, sentinels, poolConfig, timeout, timeout, password, database, null);
+  }
+
+  public JedisSentinelPool(String masterName, Set<String> sentinels,
+      final GenericObjectPoolConfig poolConfig, int timeout, final String password,
       final int database, final String clientName) {
     this(masterName, sentinels, poolConfig, timeout, timeout, password, database, clientName);
   }
@@ -85,6 +92,12 @@ public class JedisSentinelPool extends Pool<Jedis> {
   public JedisSentinelPool(String masterName, Set<String> sentinels,
       final GenericObjectPoolConfig poolConfig, final int connectionTimeout, final int soTimeout,
       final String password, final int database, final String clientName) {
+    this(masterName, sentinels, poolConfig, connectionTimeout, soTimeout, password, Integer.toString(database), clientName);
+  }
+
+  public JedisSentinelPool(String masterName, Set<String> sentinels,
+      final GenericObjectPoolConfig poolConfig, final int connectionTimeout, final int soTimeout,
+      final String password, final String database, final String clientName) {
     this.poolConfig = poolConfig;
     this.connectionTimeout = connectionTimeout;
     this.soTimeout = soTimeout;

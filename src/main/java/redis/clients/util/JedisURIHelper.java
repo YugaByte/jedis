@@ -4,7 +4,7 @@ import java.net.URI;
 
 public final class JedisURIHelper {
 
-  private static final int DEFAULT_DB = 0;
+  private static final String DEFAULT_DB = "0";
 
   private JedisURIHelper(){
     throw new InstantiationError( "Must not instantiate this class" );
@@ -18,14 +18,14 @@ public final class JedisURIHelper {
     return null;
   }
 
-  public static int getDBIndex(URI uri) {
+  public static String getDBIndex(URI uri) {
     String[] pathSplit = uri.getPath().split("/", 2);
     if (pathSplit.length > 1) {
       String dbIndexStr = pathSplit[1];
       if (dbIndexStr.isEmpty()) {
         return DEFAULT_DB;
       }
-      return Integer.parseInt(dbIndexStr);
+      return dbIndexStr;
     } else {
       return DEFAULT_DB;
     }

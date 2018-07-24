@@ -134,7 +134,7 @@ public class JedisPoolTest {
     assertTrue(pool0.isClosed());
 
     JedisPool pool1 = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared", 1);
+        "foobared", "1");
     Jedis jedis1 = pool1.getResource();
     assertNull(jedis1.get("foo"));
     pool1.returnResource(jedis1);
@@ -183,16 +183,16 @@ public class JedisPoolTest {
         "foobared");
 
     Jedis jedis0 = pool.getResource();
-    assertEquals(0L, jedis0.getDB().longValue());
+    assertEquals("0", jedis0.getDB());
 
     jedis0.select(1);
-    assertEquals(1L, jedis0.getDB().longValue());
+    assertEquals("1", jedis0.getDB());
 
     pool.returnResource(jedis0);
 
     Jedis jedis1 = pool.getResource();
     assertTrue("Jedis instance was not reused", jedis1 == jedis0);
-    assertEquals(0L, jedis1.getDB().longValue());
+    assertEquals("0", jedis1.getDB());
 
     pool.returnResource(jedis1);
     pool.destroy();
@@ -202,7 +202,7 @@ public class JedisPoolTest {
   @Test
   public void customClientName() {
     JedisPool pool0 = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared", 0, "my_shiny_client_name");
+        "foobared", "0", "my_shiny_client_name");
 
     Jedis jedis = pool0.getResource();
 
@@ -318,7 +318,7 @@ public class JedisPoolTest {
   @Test
   public void returnNullObjectShouldNotFail() {
     JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared", 0, "my_shiny_client_name");
+        "foobared", "0", "my_shiny_client_name");
 
     pool.returnBrokenResource(null);
     pool.returnResource(null);
@@ -328,7 +328,7 @@ public class JedisPoolTest {
   @Test
   public void getNumActiveIsNegativeWhenPoolIsClosed() {
     JedisPool pool = new JedisPool(new JedisPoolConfig(), hnp.getHost(), hnp.getPort(), 2000,
-        "foobared", 0, "my_shiny_client_name");
+        "foobared", "0", "my_shiny_client_name");
 
     pool.destroy();
     assertTrue(pool.getNumActive() < 0);
