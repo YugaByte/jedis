@@ -286,6 +286,11 @@ public class ShardedJedis extends BinaryShardedJedis implements JedisCommands, C
     Jedis j = getShard(key);
     return j.hkeys(key);
   }
+  
+  public Set<String> keys(String pattern) {
+    Jedis j = getAllShards().iterator().next();
+    return j.keys(pattern);
+  }
 
   public List<String> hvals(String key) {
     Jedis j = getShard(key);

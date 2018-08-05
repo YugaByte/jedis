@@ -543,6 +543,20 @@ public class JedisCluster extends BinaryJedisCluster implements JedisCommands,
       }
     }.run(key);
   }
+  
+  @Override
+  public Set<String> keys(final String pattern) {
+    if (pattern == null || pattern.isEmpty()) {
+      throw new IllegalArgumentException(this.getClass().getSimpleName()
+          + " only supports KEYS commands with non-empty patterns");
+    }
+    return new JedisClusterCommand<Set<String>>(connectionHandler, maxAttempts) {
+      @Override
+      public Set<String> execute(Jedis connection) {
+        return connection.keys(pattern);
+      }
+    }.run(pattern);
+  }
 
   @Override
   public List<String> hvals(final String key) {

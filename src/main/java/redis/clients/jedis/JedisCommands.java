@@ -109,6 +109,8 @@ public interface JedisCommands {
   Long hlen(String key);
 
   Set<String> hkeys(String key);
+  
+  Set<String> keys(String pattern);
 
   List<String> hvals(String key);
 
